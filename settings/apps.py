@@ -12,11 +12,13 @@ THIRD_PARTY_APPS = (
     'gunicorn',
     'south',
     'spurl',
+    'django_extensions',
 )
 
 PROJECT_APPS = (
     'common',
     'profiles',
+    'rooms'
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
