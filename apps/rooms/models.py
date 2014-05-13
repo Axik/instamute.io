@@ -16,7 +16,7 @@ class Room(TimeStampedModel):
         verbose_name_plural = _('Rooms')
 
     def __str__(self):
-        pass
+        return self.shorten_url
 
     def get_absolute_url(self):
         return reverse_lazy('rooms:detail', kwargs={'shorten_id': self.shorten_url})
