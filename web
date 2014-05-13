@@ -1,2 +1,2 @@
 python manage.py collectstatic --noinput
-run-program gunicorn wsgi --workers $WEB_CONCURRENCY
+gunicorn wsgi --workers $WEB_CONCURRENCY

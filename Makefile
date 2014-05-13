@@ -70,3 +70,9 @@ compilemessages:
 
 makemessages:
 	python manage.py makemessages -a
+
+heroku_db:
+	heroku pg:reset DATABASE --confirm lol-voice-alpha
+	heroku run "python manage.py syncdb --noinput" -a lol-voice-alpha
+	heroku run "python manage.py migrate" -a lol-voice-alpha
+	heroku run "python manage.py filldb" -a lol-voice-alpha
