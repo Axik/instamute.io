@@ -7,3 +7,4 @@ gunicorn
 django-braces
 django-spurl
 django-extensions==1.3.6
+short-url==1.2.1
