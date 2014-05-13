@@ -53,7 +53,7 @@ test:
 	@python manage.py test $(APPS)
 
 shell:
-	@python manage.py shell
+	@python manage.py shell_plus
 
 end:
 	@echo "You can now run development server using 'make run' command"

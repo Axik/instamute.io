@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse_lazy
 
 
 class MainView(RedirectView):
-    url = reverse_lazy('profiles:detail')
+    url = reverse_lazy('rooms:create')
 
 
 main = MainView.as_view()
