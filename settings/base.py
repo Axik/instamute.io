@@ -1,6 +1,7 @@
 import os
 
 from unipath import Path
+import dj_database_url
 
 PROJECT_DIR = Path()
 
@@ -10,7 +11,10 @@ def rel(*x):
 
 os.sys.path.insert(0, rel('apps'))
 
-DOMAIN = 'lol_voice.steelkiwi.com'
+DOMAIN = 'lol-voice-alpha.herokuapp.com'  #  temporary
+
+DATABASES = {'default': dj_database_url.config(default=os.environ.get('DATABASE_URL', {}))}
+DATABASES['default']['CONN_MAX_AGE'] = None
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -26,17 +30,6 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'lol_voice',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-    }
-}
 
 CACHES = {
     'default': {
