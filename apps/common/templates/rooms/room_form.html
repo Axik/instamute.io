@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Room create" %}
+{% endblock title %}
+{% block content %}
+    <form action="{% url 'rooms:create' %}" method="post">{% csrf_token %}
+        <input type="submit" value="Submit" />
+    </form>
+{% endblock content %}
