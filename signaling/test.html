@@ -1,0 +1,11 @@
+<script src="http://localhost:8888/socket.io.js"></script>
+<script>
+  var socket = io.connect('ws://localhost:8888');
+  alert(socket);
+  socket.emit('huy', 'huy');
+
+  socket.on('new', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+  });
+</script>
