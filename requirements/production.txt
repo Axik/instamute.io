@@ -11,3 +11,4 @@ short-url==1.2.1
 django-model-utils==2.0.3
 dj-database-url==0.3.0
 asyncio-sse
+asyncio_redis
