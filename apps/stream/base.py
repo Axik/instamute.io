@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 class Stream(sse.Handler):
     http_method_names = ['get', 'post']
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        print('pool' in kwargs)
 
     @asyncio.coroutine
     def handle_request(self):
@@ -31,3 +34,15 @@ class Stream(sse.Handler):
             }
         )
         raise MethodNotAllowed(self.http_method_names)
+
+    def validate_sse(self):
+        for header, value in self.request.headers:
+            if header.upper() == 'ACCEPT':
+                options = value.split(';')
+                for option in options:
+                    accept = option.strip()
+                    if accept in ['*', '*/*']:
+                        return True
+                    elif accept == 'text/event-stream':
+                        return True
+        raise sse.exceptions.NotAcceptable()
