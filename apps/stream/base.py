@@ -1,3 +1,4 @@
+import weakref
 import asyncio
 import logging
 import sse
@@ -8,11 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class Stream(sse.Handler):
+    redis = None
     http_method_names = ['get', 'post']
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        print('pool' in kwargs)
 
     @asyncio.coroutine
     def handle_request(self):
@@ -46,3 +44,15 @@ class Stream(sse.Handler):
                     elif accept == 'text/event-stream':
                         return True
         raise sse.exceptions.NotAcceptable()
+
+    def schedule_ping(self):
+        # Need be carefully with CPython garbage collection
+        wself = weakref.ref(self)
+        def _schedule_ping():
+            handler = wself()
+            if not handler:
+                return
+            handler.send(":p\n\n")
+            handler.ping()
+        loop = asyncio.get_event_loop()
+        loop.call_later(2000, _schedule_ping)
