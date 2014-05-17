@@ -46,6 +46,9 @@ loaddata:
 run:
 	@python manage.py runserver
 
+stream:
+	@python manage.py stream
+
 runpub:
 	@python manage.py runserver 0.0.0.0:8000
 

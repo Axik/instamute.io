@@ -13,6 +13,7 @@ THIRD_PARTY_APPS = (
     'south',
     'spurl',
     'django_extensions',
+    'stream'
 )
 
 PROJECT_APPS = (
