@@ -1,6 +1,8 @@
 import six
 from sse.exceptions import SseException
 
+__all__ = ['MethodNotAllowed', 'NotFound']
+
 
 class StreamProtocolException(SseException):
     """
