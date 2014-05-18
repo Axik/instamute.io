@@ -11,7 +11,7 @@ HiBuddyApp.prototype = {
     this.stream = stream;
     this.onRemoteStream = callback;
 
-    this.source = new EventSource("http://192.168.0.100:8888/rooms/" + this.room + "/signalling");
+    this.source = new EventSource("http://"+ window.location.hostname +":8888/rooms/" + this.room + "/signalling");
     this.source.on = this.source.addEventListener.bind(this.source);
     this.source.on("uid",          this._onUID.bind(this));
     this.source.on("newbuddy",     this._onNewBuddy.bind(this));
@@ -119,7 +119,7 @@ HiBuddyApp.prototype = {
 
   _post: function(data) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://192.168.0.100:8888/rooms/' + this.room + '/signalling', true);
+    xhr.open('POST', 'http://'+ window.location.hostname +':8888/rooms/' + this.room + '/signalling', true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr.send(JSON.stringify(data));
   }
