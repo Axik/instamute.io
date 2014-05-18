@@ -13,7 +13,7 @@ class Command(BaseCommand):
     help = 'Starts streaming http server'
 
     def handle(self, *args, **options):
-        host, port = 'localhost', 8888
+        host, port = '0.0.0.0', 8888
         loop = asyncio.get_event_loop()
         start_server = sse.serve(SignalHandler, host, port)
         loop.run_until_complete(start_server)
