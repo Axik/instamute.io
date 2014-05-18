@@ -30,7 +30,7 @@ class SignalHandler(Stream):
         yield from self.redis.publish(room, "event: newbuddy\n")
         yield from self.redis.publish(room, "data: {}\n\n")
 
-        self.schedule_ping()
+        self.heartbeat()
         logger.debug('New participant was published with uid={}'.format(uid))
         subscriber = yield from self.redis.start_subscribe()
 

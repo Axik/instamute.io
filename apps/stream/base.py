@@ -45,14 +45,31 @@ class Stream(sse.Handler):
                         return True
         raise sse.exceptions.NotAcceptable()
 
-    def schedule_ping(self):
+    def heartbeat(self):
         # Need be carefully with CPython garbage collection
         wself = weakref.ref(self)
-        def _schedule_ping():
+        def _heartbeat():
             handler = wself()
             if not handler:
                 return
             handler.send(":p\n\n")
             handler.ping()
         loop = asyncio.get_event_loop()
-        loop.call_later(2000, _schedule_ping)
+        loop.call_later(2000, _heartbeat)
+
+    def prepare_response(self):
+        # SSE author is definitely fucking mongoloid
+        response = sse.Response(self.transport, 200)
+        response.add_header('Content-Type', 'text/event-stream')
+        response.add_header('Cache-Control', 'no-cache')
+        response.add_header('Connection', 'keep-alive')
+        response.add_header("Access-Control-Allow-Origin", "*")
+        response.add_header("Access-Control-Allow-Methods", "POST, GET")
+        response.add_header("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept")
+        response.add_header("Access-Control-Max-Age", "1728000")
+        response.send_headers()
+        self.response = response
+
+    def send(self, *args, **kwargs):
+        logger.info('[%s]Sending %s | %s', id(self), args, kwargs)
+        return super().send(*args, **kwargs)
