@@ -39,24 +39,8 @@ class SignalHandler(Stream):
         # Inside a while loop, wait for incoming events.
         while True:
             reply = yield from subscriber.next_published()
-            logger.info(reply.value)
             data, event = json.loads(reply.value)
+            if data.get('from', '') == uid:
+                continue
             self.send(data, event=event)
             logger.info('Transmitted: %s from chanel %s', repr(event), reply.channel)
-
-    @asyncio.coroutine
-    def post(self):
-        room = self.get_param()
-        event_json = yield from self.payload.read()
-        while True:
-            try:
-                yield from self.redis.publish(room, "event: {}\n".format(event_json))
-            except Exception: # Pool is full
-                yield from asyncio.sleep(0.01)
-            else:
-                break
-        self.response.transport.drain = lambda : self.response.transport.close()
-
-    @asyncio.coroutine
-    def options(self):
-        yield from self.post()

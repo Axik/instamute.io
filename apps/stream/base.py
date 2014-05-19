@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class Stream(sse.Handler):
     redis = None
-    http_method_names = ['get', 'post', 'options']
+    http_method_names = ['get',]
 
     @asyncio.coroutine
     def handle_request(self):

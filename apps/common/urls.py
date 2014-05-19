@@ -7,7 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns(
     'common.views',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^room/', include('rooms.urls', 'rooms')),
+    url(r'^rooms/', include('rooms.urls', 'rooms')),
     url(r'^profile/', include('profiles.urls', 'profiles')),
     url(r'^$', 'main', name='main'),
 )

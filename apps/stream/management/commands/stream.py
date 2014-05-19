@@ -19,7 +19,7 @@ class Command(BaseCommand):
         loop.run_until_complete(start_server)
         logger.info("Server listening on {0}:{1}".format(host, port))
 
-        redis_pool = create_pooling(host='localhost', port=6379, poolsize=10)
+        redis_pool = create_pooling(host='localhost', port=6379, poolsize=100)
         loop.run_until_complete(redis_pool)
         logger.info("Redis pool initialized with pool_size={}".format(10))
         loop.run_forever()
