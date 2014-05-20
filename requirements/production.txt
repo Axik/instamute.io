@@ -12,3 +12,5 @@ django-model-utils==2.0.3
 dj-database-url==0.3.0
 asyncio-sse
 asyncio_redis
+django-rq==0.6.0
+django-redis-cache==0.10.0

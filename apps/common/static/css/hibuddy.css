@@ -1,0 +1,165 @@
+html, body, article {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background-color: #323a45;
+    font-family: "Nimbus Sans L";
+    color: #ECECEC;
+}
+
+a {
+    text-decoration: none;
+}
+
+.forkme {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    z-index: 4;
+}
+
+nav {
+    position: absolute;
+    top: calc(50% - 250px / 2);
+    left: 5px;
+    width: auto;
+    background-color: #191919;
+    border-radius: 5px;
+    z-index: 4;
+}
+
+nav ul {
+    padding: 0px 10px;
+}
+
+nav li {
+    list-style: none;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+nav .icon {
+    fill: #8c8887;
+    transition: fill 0.5s;
+}
+
+nav .icon:hover {
+    fill: #A6A1A0;
+    transition: fill 0.5s;
+}
+
+nav .enabled path.disable {
+    visibility: hidden;
+}
+nav .disabled path.enable {
+    visibility: hidden;
+}
+
+article.landing {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+article.room {
+    background-image: url("/static/css/buddy.svg");
+    background-position: center 0px;
+    background-repeat: no-repeat;
+    background-size: auto 120%;
+}
+
+article header {
+    position: relative;
+    top: calc(50% - 13em);
+    width: 700px;
+    margin: auto;
+    text-align: center;
+}
+
+article header h1 {
+    font-size: 72px;
+    font-weight: bold;
+    margin-bottom: 0px;
+    line-height: 1;
+}
+
+article header p {
+    font-size: 21px;
+    margin-bottom: 20px;
+}
+
+.button {
+    font-size: 21px;
+    padding: 14px 24px;
+    background-color: #4BA361;
+    border: none;
+    border-radius: 5px;
+    font-family: "Nimbus Sans L";
+    color: #ECECEC;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.button:hover {
+    background-color: #57BD70;
+    color: #FFFFFF;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+article .message {
+    position: absolute;
+    top: calc(50% - 2em);
+    width: 100%;
+    font-size: 40px;
+    z-index: 2;
+}
+
+article .message p {
+    margin: auto;
+    width: 700px;
+    text-align: center;
+}
+
+
+article .message input {
+    padding: 14px 24px;
+    width: 70%;
+    font-size: 14px;
+    color: #ECECEC;
+    background-color: #4BA361;
+    border: medium none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+video#local-video {
+    transform: scale(-1, 1);
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: auto;
+    height: 200px;
+    border-radius: 5px;
+    z-index: 3;
+}
+
+
+video#remote-video {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hidden {
+    display: none;
+}
+
