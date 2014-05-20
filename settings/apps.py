@@ -13,13 +13,13 @@ THIRD_PARTY_APPS = (
     'south',
     'spurl',
     'django_extensions',
-    'stream'
 )
 
 PROJECT_APPS = (
     'common',
     'profiles',
-    'rooms'
+    'rooms',
+    'stream',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS

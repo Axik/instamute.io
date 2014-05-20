@@ -24,13 +24,11 @@ class SignalHandler(Stream):
     def get(self):
         room = self.get_param()
         uid = uuid.uuid4().hex
-        self.send('event: uid\n')
         event = json.dumps(dict(type='uid', uid=uid))
-        self.send("data: {}\n\n".format(event))
-        yield from self.redis.publish(room, "event: newbuddy\n")
-        yield from self.redis.publish(room, "data: {}\n\n")
+        self.send("event: uid\ndata: {}\n\n".format(event))
+        yield from self.redis.publish(room, "event: newbuddy\ndata: {}\n\n".format(event))
 
-        self.schedule_ping()
+        self.heartbeat()
         logger.debug('New participant was published with uid={}'.format(uid))
         subscriber = yield from self.redis.start_subscribe()
 
