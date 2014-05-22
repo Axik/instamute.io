@@ -24,11 +24,10 @@ class RoomDetailView(DetailView):
         return get_object_or_404(self.model, **{'id': decoded_id})
 
 
-class SinalingUpdate(View):
+class SignalingUpdate(View):
 
     def get(self, request, *args, **kwargs):
         room = self.kwargs.get('shorten_id')
-        # b'{"type":"icecandidate","from":"4390d76aaa514006b753e77b5bdccd96","candidate":{"candidate":"candidate:1 2 UDP 1686110206 193.239.74.126 56125 typ srflx raddr 10.2.2.41 rport 56125","sdpMid":"","sdpMLineIndex":0}}'
         raw = self.request.body.decode('ascii')
         event = json.loads(raw)
         packet = (event, event['type'])
@@ -40,4 +39,4 @@ class SinalingUpdate(View):
 
 room_create = RoomCreateView.as_view()
 room_detail = RoomDetailView.as_view()
-signaling =  SinalingUpdate.as_view()
+signaling = SignalingUpdate.as_view()

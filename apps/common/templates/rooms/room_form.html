@@ -1,31 +1,15 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Lol voice</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link href="{% static "css/hibuddy.css" %} " rel="stylesheet" >
-  </head>
-
-  <body>
-
-    <article class="landing">
-      <header>
-        <h1>Damn simple video chats for the Web!</h1>
-        <p>HiBuddy is a damn simple web application to make video
-        chats with your friends. Create a room, give the url to
-        someone else and say hi!</p>
-        <form method="POST" action="{% url 'rooms:create' %}">
-           {% csrf_token %}
-          <input type="hidden" name="room" value=""/>
-          <input type="submit" value="Create a room" class="button"/>
-        </form>
-      </header>
-    </article>
-  </body>
-
-</html>
-
-
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Room create" %}
+{% endblock title %}
+{% block content %}
+          <div class="inner cover">
+            <h1 class="cover-heading">Create room</h1>
+            <form action="{% url 'rooms:create' %}" method="post">{% csrf_token %}
+            <p class="lead">
+              <input class="btn btn-lg btn-default" type="submit" value="Submit" />
+            </p>
+          </div>
+    </form>
+{% endblock content %}
