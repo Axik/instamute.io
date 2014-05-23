@@ -1,11 +1,11 @@
 import re
-import pickle
 import uuid
 import json
 import asyncio
 import logging.config
 from .base import Stream
 from .exceptions import NotFound
+from django.contrib.webdesign import lorem_ipsum
 
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,8 @@ class SignalHandler(Stream):
     @asyncio.coroutine
     def get(self):
         room = self.get_param()
-        uid = uuid.uuid4().hex
+        # uid = uuid.uuid4().hex
+        uid = lorem_ipsum.words(1, False).capitalize()
         data = dict(type='uid', uid=uid)
         self.send(data, event='uid' )
         yield from self.redis.publish(room, json.dumps((data, 'newbuddy')))
@@ -36,11 +37,21 @@ class SignalHandler(Stream):
         # Subscribe to channel.
         yield from subscriber.subscribe([room])
 
+        connected_to_me = set()
+
         # Inside a while loop, wait for incoming events.
         while True:
             reply = yield from subscriber.next_published()
             data, event = json.loads(reply.value)
-            if data.get('from', '') == uid:
+            sender = data.get('from', '')
+            if sender == uid:
                 continue
+            if event == 'connected':
+                logger.info('RTC session was established')
+                connected_to_me.add(sender)
+            elif sender in connected_to_me:
+                logger.info('Ignoring event from %s', sender)
+                continue
+
             self.send(data, event=event)
             logger.info('Transmitted: %s from chanel %s', repr(event), reply.channel)
