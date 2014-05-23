@@ -10,7 +10,7 @@ HiBuddyApp.prototype = {
     start: function(stream, callback) {
         this.stream = stream;
         this.onRemoteStream = callback;
-        this.peers = [];
+        this.peers = {};
         this.config = {
             iceServers: [{
                 // please contact me if you plan to use this server
@@ -34,11 +34,14 @@ HiBuddyApp.prototype = {
         console.log('UID: ' + this.me);
     },
 
-    _onNewBuddy: function() {
+    _onNewBuddy: function(event) {
+
         var peerConnection = new RTCPeerConnection(this.config);
         peerConnection = this._setupPeerConnection(peerConnection);
-        this.peers.push(peerConnection);
-        this._sendOffer();
+        var message = JSON.parse(event.data);
+        console.log("New user" + message.uid);
+        this.peers[message.uid] = peerConnection;
+        this._sendOffer(peerConnection);
         this.trigger("newbuddy");
     },
 
@@ -46,21 +49,23 @@ HiBuddyApp.prototype = {
         var message = JSON.parse(event.data);
         var peerConnection = new RTCPeerConnection(this.config);
         peerConnection = this._setupPeerConnection(peerConnection);
-        this.peers.push(peerConnection);
+        this.peers[message.from] = peerConnection;
+        console.log(message.from);
 
         var offer = new RTCSessionDescription(message.offer);
         peerConnection.setRemoteDescription(offer, function() {
-            this._sendAnswer();
+            this._sendAnswer(peerConnection);
         }.bind(this));
 
     },
 
     _onAnswer: function(event) {
         var message = JSON.parse(event.data);
-        console.log(message.answer);
 
         var answer = new RTCSessionDescription(message.answer);
-        var peerConnection = this.peers.slice(-1)[0];
+        var peerConnection = this.peers[message.from];
+        console.log('_onAnswer:' + message.from);
+        if (peerConnection === undefined) {return;}
         peerConnection.setRemoteDescription(answer, function() {
             console.log("done");
         }.bind(this));
@@ -68,17 +73,16 @@ HiBuddyApp.prototype = {
 
     _onIceCandidate: function(event) {
         var message = JSON.parse(event.data);
-
+        console.log('_onIceCandidate:' + message.from);
         var candidate = new RTCIceCandidate(message.candidate);
-        var peerConnection = this.peers.slice(-1)[0];
+        var peerConnection = this.peers[message.from];
+
 
         peerConnection.addIceCandidate(candidate);
     },
 
-    _onIceStateChange: function() {
+    _onIceStateChange: function(peerConnection) {
         // XXX: display an error if the ice connection failed
-        var peerConnection = this.peers.slice(-1)[0];
-
         console.log("ice: " + peerConnection.iceConnectionState);
         if (peerConnection.iceConnectionState === "failed") {
             console.error("Something went wrong: the connection failed");
@@ -116,16 +120,19 @@ HiBuddyApp.prototype = {
     },
 
     _setupPeerConnection: function(pc) {
+        var closure = function(){
+            this._onIceStateChange(pc);
+        };
         pc.onaddstream = this._onAddStream.bind(this);
-        pc.oniceconnectionstatechange = this._onIceStateChange.bind(this);
+        pc.oniceconnectionstatechange = closure.bind(this);
         pc.onicecandidate = this._onNewIceCandidate.bind(this);
         pc.addStream(this.stream);
         return pc;
     },
 
-    _sendOffer: function() {
+    _sendOffer: function(peerConnection) {
         // Create offer
-        var peerConnection = this.peers.slice(-1)[0];
+
         peerConnection.createOffer(function(offer) {
             peerConnection.setLocalDescription(offer, function() {
                 // Send offer
@@ -138,9 +145,8 @@ HiBuddyApp.prototype = {
         }.bind(this), function() {});
     },
 
-    _sendAnswer: function() {
+    _sendAnswer: function(peerConnection) {
         // Create answer
-        var peerConnection = this.peers.slice(-1)[0];
         peerConnection.createAnswer(function(answer) {
             peerConnection.setLocalDescription(answer, function() {
                 // Send answer

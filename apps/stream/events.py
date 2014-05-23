@@ -10,8 +10,6 @@ from django.contrib.webdesign import lorem_ipsum
 
 logger = logging.getLogger(__name__)
 
-logging.basicConfig(level='INFO', format='%(message)s')
-
 
 class SignalHandler(Stream):
 
@@ -27,6 +25,7 @@ class SignalHandler(Stream):
         # uid = uuid.uuid4().hex
         uid = lorem_ipsum.words(1, False).capitalize()
         data = dict(type='uid', uid=uid)
+        data['from'] = uid
         self.send(data, event='uid' )
         yield from self.redis.publish(room, json.dumps((data, 'newbuddy')))
 
@@ -38,7 +37,6 @@ class SignalHandler(Stream):
         yield from subscriber.subscribe([room])
 
         connected_to_me = set()
-
         # Inside a while loop, wait for incoming events.
         while True:
             reply = yield from subscriber.next_published()
@@ -46,12 +44,12 @@ class SignalHandler(Stream):
             sender = data.get('from', '')
             if sender == uid:
                 continue
-            if event == 'connected':
-                logger.info('RTC session was established')
-                connected_to_me.add(sender)
-            elif sender in connected_to_me:
-                logger.info('Ignoring event from %s', sender)
-                continue
+            # if sender in connected_to_me:
+            #     logger.info('Ignoring event from %s, %s', sender, data)
+            #     continue
+            # elif event == 'connected':
+            #     logger.info('RTC session was established')
+            #     connected_to_me.add(sender)
 
             self.send(data, event=event)
             logger.info('Transmitted: %s from chanel %s', repr(event), reply.channel)

@@ -50,6 +50,12 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+
+        'stream': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
     }
 }
 

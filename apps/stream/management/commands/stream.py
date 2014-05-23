@@ -7,7 +7,7 @@ from ...events import SignalHandler
 
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level='INFO', format='%(message)s')
+
 
 class Command(BaseCommand):
     help = 'Starts streaming http server'
