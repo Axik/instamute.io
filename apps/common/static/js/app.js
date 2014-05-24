@@ -26,10 +26,10 @@
 
     var counter = 0;
     var last_vid = 0;
-    hibuddy.on("newbuddy", function() {
-        console.log("newbuddy");
-
-    });
+//    hibuddy.on("newbuddy", function() {
+//        console.log("newbuddy");
+//
+//    });
     hibuddy.on("connected", function() {
         allowMedia.classList.add("hidden");
     });

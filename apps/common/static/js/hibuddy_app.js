@@ -26,12 +26,18 @@ HiBuddyApp.prototype = {
         this.source.on("offer", this._onOffer.bind(this));
         this.source.on("answer", this._onAnswer.bind(this));
         this.source.on("icecandidate", this._onIceCandidate.bind(this));
+        this.source.on("invite", this._onInvite.bind(this));
     },
 
     _onUID: function(event) {
         var message = JSON.parse(event.data);
         this.me = message.uid;
         console.log('UID: ' + this.me);
+    },
+
+    _onInvite: function(event) {
+        var message = JSON.parse(event.data);
+        var peerConnection = this._get_or_create_peer(message);
     },
 
     _onNewBuddy: function(event) {
@@ -41,7 +47,13 @@ HiBuddyApp.prototype = {
         var message = JSON.parse(event.data);
         console.log("New user" + message.uid);
         this.peers[message.uid] = peerConnection;
-        this._sendOffer(peerConnection);
+        this._post({
+                type: 'invite',
+                from: this.me,
+                to: message.uid,
+                invite: 'invite'
+            });
+        this._sendOffer(peerConnection, message.uid);
         this.trigger("newbuddy");
     },
 
@@ -50,11 +62,10 @@ HiBuddyApp.prototype = {
         var peerConnection = new RTCPeerConnection(this.config);
         peerConnection = this._setupPeerConnection(peerConnection);
         this.peers[message.from] = peerConnection;
-        console.log(message.from);
 
         var offer = new RTCSessionDescription(message.offer);
         peerConnection.setRemoteDescription(offer, function() {
-            this._sendAnswer(peerConnection);
+            this._sendAnswer(peerConnection, message.from);
         }.bind(this));
 
     },
@@ -75,10 +86,27 @@ HiBuddyApp.prototype = {
         var message = JSON.parse(event.data);
         console.log('_onIceCandidate:' + message.from);
         var candidate = new RTCIceCandidate(message.candidate);
-        var peerConnection = this.peers[message.from];
+        var peerConnection = this._get_or_create_peer(message);
 
 
         peerConnection.addIceCandidate(candidate);
+    },
+
+    _get_or_create_peer: function(message){
+        var from = message.from;
+        if (from === undefined){
+            console.error('Fuck IT');
+            return undefined;
+        }
+        var peerConnection = this.peers[from];
+        if (peerConnection === undefined){
+            var _peerConnection = new RTCPeerConnection(this.config);
+            peerConnection = this._setupPeerConnection(_peerConnection);
+            this.peers[from] = peerConnection;
+            return peerConnection;
+
+        }
+        return peerConnection;
     },
 
     _onIceStateChange: function(peerConnection) {
@@ -110,6 +138,7 @@ HiBuddyApp.prototype = {
             this._post({
                 type: 'icecandidate',
                 from: this.me,
+                to: event.from,
                 candidate: candidate
             });
         }
@@ -130,7 +159,7 @@ HiBuddyApp.prototype = {
         return pc;
     },
 
-    _sendOffer: function(peerConnection) {
+    _sendOffer: function(peerConnection, to) {
         // Create offer
 
         peerConnection.createOffer(function(offer) {
@@ -139,13 +168,14 @@ HiBuddyApp.prototype = {
                 this._post({
                     type: 'offer',
                     from: this.me,
+                    to: to,
                     offer: offer
                 });
             }.bind(this));
         }.bind(this), function() {});
     },
 
-    _sendAnswer: function(peerConnection) {
+    _sendAnswer: function(peerConnection, to) {
         // Create answer
         peerConnection.createAnswer(function(answer) {
             peerConnection.setLocalDescription(answer, function() {
@@ -153,6 +183,7 @@ HiBuddyApp.prototype = {
                 this._post({
                     type: 'answer',
                     from: this.me,
+                    to: to,
                     answer: answer
                 });
             }.bind(this));

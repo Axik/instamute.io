@@ -71,5 +71,9 @@ class Stream(sse.Handler):
         self.response = response
 
     def send(self, *args, **kwargs):
-        logger.info('[%s]Sending %s | %s', id(self), args, kwargs)
-        return super().send(*args, **kwargs)
+        logger.info('[%s]Sending %s / %s', self.me, args, kwargs)
+        try:
+            return super().send(*args, **kwargs)
+        except AssertionError:
+            # SSE author is definitely fucking mongoloid
+            pass

@@ -1,51 +1,56 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Hi Buddy</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  </head>
+{% load i18n %}
+{% block title %}
+    {% trans "Your room" %}
 
-  <body>
+{% endblock title %}
 
+
+{% block content %}
     <nav>
-      <ul>
-        <li class="home">
-          <a href="/">
-          </a>
-        </li>
-        <li class="video enabled">
-        </li>
-        <li class="audio enabled">
-        </li>
-        <li class="fullscreen disabled">
-        </li>
-      </ul>
-    </nav>
+       <ul>
+         <li class="home">
+           <a href="/">
+           </a>
+         </li>
+         <li class="video enabled">
+         </li>
+         <li class="audio enabled">
+         </li>
+         <li class="fullscreen disabled">
+         </li>
+       </ul>
+     </nav>
 
-    <article class="room">
-      <div class="message">
-        <p id="allow-media" class="hidden">Please, let us capture your webcam and microphone</p>
-        <p id="share-url" class="hidden">
-          You're the only one in this room. Invite one person by sharing the following url:
-          <input type="text" value="" readonly="readonly">
-        </p>
-        <p id="connecting" class="hidden">Connecting...</p>
-        <p id="error" class="hidden"></p>
-      </div>
-    </article>
+     <article class="room">
+       <div class="message">
+         <p id="allow-media" class="hidden">Please, let us capture your webcam and microphone</p>
+         <p id="share-url" class="hidden">
+           You're the only one in this room. Invite one person by sharing the following url:
+           <input type="text" value="" readonly="readonly">
+         </p>
+         <p id="connecting" class="hidden">Connecting...</p>
+         <p id="error" class="hidden"></p>
+       </div>
+     </article>
+
     <div id="videos">
-      <video id="local-video" muted></video>
+       <video id="local-video" muted></video>
 
-    </div>
+     </div>
+{% endblock content %}
 
+{% block js %}
+    {{ block.super }}
     <script type="text/javascript" src="{% static "js/microevent.js" %} "></script>
     <script type="text/javascript" src="{% static "js/webrtc-shim.js" %} "></script>
     <script type="text/javascript" src="{% static "js/hibuddy_app.js" %} "></script>
     <script type="text/javascript" src="{% static "js/toolbar.js" %} "></script>
     <script type="text/javascript" src="{% static "js/app.js" %} "></script>
+{% endblock js %}
 
-</body>
+
+
 
