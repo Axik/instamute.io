@@ -1,6 +1,6 @@
 /* globals EventSource, MicroEvent,
    RTCPeerConnection, RTCSessionDescription, RTCIceCandidate */
-
+//todo rename
 function HiBuddyApp(room) {
     this.room = room;
     this.me = undefined;
@@ -38,13 +38,15 @@ HiBuddyApp.prototype = {
     _onInvite: function(event) {
         var message = JSON.parse(event.data);
         var peerConnection = this._get_or_create_peer(message);
+        peerConnection.from = message.from;
     },
 
     _onNewBuddy: function(event) {
 
         var peerConnection = new RTCPeerConnection(this.config);
-        peerConnection = this._setupPeerConnection(peerConnection);
         var message = JSON.parse(event.data);
+        peerConnection.from = message.uid;
+        peerConnection = this._setupPeerConnection(peerConnection);
         console.log("New user" + message.uid);
         this.peers[message.uid] = peerConnection;
         this._post({
@@ -60,8 +62,9 @@ HiBuddyApp.prototype = {
     _onOffer: function(event) {
         var message = JSON.parse(event.data);
         var peerConnection = new RTCPeerConnection(this.config);
-        peerConnection = this._setupPeerConnection(peerConnection);
         this.peers[message.from] = peerConnection;
+        peerConnection.from = message.from;
+        peerConnection = this._setupPeerConnection(peerConnection);
 
         var offer = new RTCSessionDescription(message.offer);
         peerConnection.setRemoteDescription(offer, function() {
@@ -101,6 +104,7 @@ HiBuddyApp.prototype = {
         var peerConnection = this.peers[from];
         if (peerConnection === undefined){
             var _peerConnection = new RTCPeerConnection(this.config);
+            _peerConnection.from = from;
             peerConnection = this._setupPeerConnection(_peerConnection);
             this.peers[from] = peerConnection;
             return peerConnection;
@@ -115,6 +119,11 @@ HiBuddyApp.prototype = {
         if (peerConnection.iceConnectionState === "failed") {
             console.error("Something went wrong: the connection failed");
             this.trigger("failure");
+        }
+
+        if (peerConnection.iceConnectionState === "disconnected") {
+            this.trigger("disconnected");
+//            todo: remove video with peerConnection.from id
         }
 
         if (peerConnection.iceConnectionState === "connected"){
@@ -144,17 +153,23 @@ HiBuddyApp.prototype = {
         }
     },
 
-    _onAddStream: function(event) {
-        this.onRemoteStream(event.stream);
-    },
-
     _setupPeerConnection: function(pc) {
         var closure = function(){
             this._onIceStateChange(pc);
         };
-        pc.onaddstream = this._onAddStream.bind(this);
+
+        _onAddStream = function(event) {
+            this.onRemoteStream(event.stream, pc.from);
+        };
+
+//        _onRemoveStream = function(){
+//          console.log('removed');
+//        };
+
+        pc.onaddstream = _onAddStream.bind(this);
         pc.oniceconnectionstatechange = closure.bind(this);
         pc.onicecandidate = this._onNewIceCandidate.bind(this);
+//        pc.onremovestream = _onRemoveStream.bind(this);
         pc.addStream(this.stream);
         return pc;
     },

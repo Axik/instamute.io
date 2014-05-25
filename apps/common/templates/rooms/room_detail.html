@@ -35,11 +35,16 @@
          <p id="error" class="hidden"></p>
        </div>
      </article>
+{# todo: design it#}
 
-    <div id="videos">
-       <video id="local-video" muted></video>
+    <div class="row" id="videos">
 
-     </div>
+      <div class="col-xs-6 col-md-3" id="me">
+          <video id="local-video" muted></video>
+      </div>
+
+    </div>
+
 {% endblock content %}
 
 {% block js %}

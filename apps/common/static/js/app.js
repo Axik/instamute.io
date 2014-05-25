@@ -14,7 +14,7 @@
     var parent_div = document.getElementById('videos')
 
     shareUrl.querySelector("input").value = window.location;
-
+// todo: figure out with this
     // function display(element) {
     //   var elements = [allowMedia, shareUrl, connecting, remoteVideo, error];
     //   elements.forEach(function(elem) {
@@ -24,8 +24,6 @@
     //   element.classList.remove("hidden");
     // }
 
-    var counter = 0;
-    var last_vid = 0;
 //    hibuddy.on("newbuddy", function() {
 //        console.log("newbuddy");
 //
@@ -48,13 +46,18 @@
         localVideo.src = URL.createObjectURL(localStream);
         localVideo.play();
 
-        hibuddy.start(localStream, function(remoteStream) {
-            last_vid = document.createElement('video');
-            last_vid.id = counter;
-            counter = counter + 1
-            parent_div.appendChild(last_vid);
-            last_vid.src = URL.createObjectURL(remoteStream);
-            last_vid.play();
+        hibuddy.start(localStream, function(remoteStream, from) {
+
+//            todo: imporove this!!!
+            var div = document.createElement('div');
+            div.class="col-xs-6 col-md-3";
+
+            var video_tab = document.createElement('video');
+            video_tab.id = from;
+            div.appendChild(video_tab);
+            parent_div.appendChild(div);
+            video_tab.src = URL.createObjectURL(remoteStream);
+            video_tab.play();
         });
 
     }, function(err) {
