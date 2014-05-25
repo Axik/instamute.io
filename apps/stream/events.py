@@ -29,16 +29,17 @@ class SignalHandler(Stream):
         data = dict(type='uid', uid=uid)
         data['from'] = uid
         self.send(data, event='uid' )
-        yield from self.redis.publish(room, json.dumps((data, 'newbuddy')))
+
+        connection = yield from self.get_connection()
+        yield from connection.publish(room, json.dumps((data, 'newbuddy')))
 
         self.heartbeat()
         logger.info('New participant was published with uid={}'.format(uid))
-        subscriber = yield from self.redis.start_subscribe()
+        subscriber = yield from connection.start_subscribe()
 
         # Subscribe to channel.
         yield from subscriber.subscribe([room])
 
-        connected_to_me = set()
         # Inside a while loop, wait for incoming events.
         while True:
             reply = yield from subscriber.next_published()
@@ -52,3 +53,13 @@ class SignalHandler(Stream):
 
             self.send(data, event=event)
             logger.info('Transmitted: %s from chanel %s', repr(event), reply.channel)
+
+    @asyncio.coroutine
+    def get_connection(self):
+        while True:
+            connection = self.redis._get_free_connection()
+            if not connection:
+                yield from asyncio.sleep(0.001)
+            else:
+                yield
+                return connection

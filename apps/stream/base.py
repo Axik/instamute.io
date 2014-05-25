@@ -52,8 +52,7 @@ class Stream(sse.Handler):
             handler = wself()
             if not handler:
                 return
-            handler.send(":p\n\n")
-            handler.ping()
+            handler.send('', event='heartbeat')
         loop = asyncio.get_event_loop()
         loop.call_later(2000, _heartbeat)
 
