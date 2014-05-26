@@ -5,7 +5,7 @@
     var hibuddy = new HiBuddyApp(room);
     var toolbar;
 
-    var localVideo = document.getElementById('local-video');
+    var localVideo = document.getElementById('local-audio');
     var remoteVideo = document.getElementById('remote-video');
     var allowMedia = document.getElementById('allow-media');
     var shareUrl = document.getElementById('share-url');
@@ -15,7 +15,7 @@
     var stream_proto = document.getElementById('my_stream');
 
     shareUrl.querySelector("input").value = window.location;
-// todo: figure out with this
+    // todo: figure out with this
     // function display(element) {
     //   var elements = [allowMedia, shareUrl, connecting, remoteVideo, error];
     //   elements.forEach(function(elem) {
@@ -25,10 +25,10 @@
     //   element.classList.remove("hidden");
     // }
 
-//    hibuddy.on("newbuddy", function() {
-//        console.log("newbuddy");
-//
-//    });
+    //    hibuddy.on("newbuddy", function() {
+    //        console.log("newbuddy");
+    //
+    //    });
     hibuddy.on("connected", function() {
         allowMedia.classList.add("hidden");
     });
@@ -51,11 +51,12 @@
 
             var stream_clone = stream_proto.cloneNode(true);
             stream_clone.id = from;
-            var video_input =  stream_clone.querySelector('#local-video');
-            video_input.id = from;
+            var audio_input = stream_clone.querySelector('#local-audio');
+            audio_input.id = from;
             parent_div.appendChild(stream_clone);
-            video_input.src = URL.createObjectURL(remoteStream);
-            video_input.play();
+            audio_input.src = URL.createObjectURL(remoteStream);
+            audio_input.removeAttribute("muted")
+            audio_input.play();
         });
 
     }, function(err) {
