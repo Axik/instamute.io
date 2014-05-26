@@ -22,14 +22,12 @@
 
   <body>
 
+  {% block content %}
     <div class="site-wrapper">
 
       <div class="site-wrapper-inner">
 
         <div class="cover-container">
-        {% block content %}
-
-
           <div class="masthead clearfix">
             <div class="inner">
               <h3 class="masthead-brand">Cover</h3>
@@ -54,13 +52,13 @@
               <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
             </div>
           </div>
-        {% endblock content %}
 
         </div>
 
       </div>
 
     </div>
+    {% endblock content %}
     {% block js %}
         <script type="text/javascript" src="{% static "js/jquery.min.js" %}"></script>
         <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>

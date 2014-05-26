@@ -3,13 +3,69 @@
 
 {% load i18n %}
 {% block title %}
-    {% trans "Your room" %}
+    {% trans "None and void: " %} {{ object.shorten_url }}
 
 {% endblock title %}
 
 
 {% block content %}
-    <nav>
+<div class="site-wrapper">
+  <div class="site-wrapper-inner">
+    <div class="row headroom">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="form-group">
+          <label for="copy_link">{% trans "Copy link below to share this room with your mates" %}</label>
+          <input id="copy_link" type="text" disabled value="{{ request.build_absolute_uri }}">
+          <button class="btn btn-default btn-sm" id="copy_link_button"><span class="glyphicon glyphicon-link"></span></button>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="row">
+          <div class="col-md-6">
+            <a href="#">
+              <button class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </a>
+          </div>
+          <div class="col-md-6">
+            <a href="">
+              <button class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-trash">
+                </span>
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" id="videos">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-user"></span></button>
+          </div>
+          <div class="col-md-9 audio_output" id="me">
+            <video id="local-video" muted></video>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-eye-close"></span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+    <nav style="display: none;">
        <ul>
          <li class="home">
            <a href="/">
@@ -23,8 +79,7 @@
          </li>
        </ul>
      </nav>
-
-     <article class="room">
+     <article class="room" style="display: none;">
        <div class="message">
          <p id="allow-media" class="hidden">Please, let us capture your webcam and microphone</p>
          <p id="share-url" class="hidden">
@@ -35,16 +90,6 @@
          <p id="error" class="hidden"></p>
        </div>
      </article>
-{# todo: design it#}
-
-    <div class="row" id="videos">
-
-      <div class="col-xs-6 col-md-3" id="me">
-          <video id="local-video" muted></video>
-      </div>
-
-    </div>
-
 {% endblock content %}
 
 {% block js %}
