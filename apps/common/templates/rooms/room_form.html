@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block title %}
-    {% trans "Room create" %}
+{% trans "Room create" %}
 {% endblock title %}
 {% block content %}
-          <div class="inner cover">
-            <h1 class="cover-heading">Create room</h1>
-            <form action="{% url 'rooms:create' %}" method="post">{% csrf_token %}
-            <p class="lead">
-              <input class="btn btn-lg btn-default" type="submit" value="Submit" />
-            </p>
-          </div>
+<div class="inner cover">
+    <h1 class="cover-heading">{% trans "Create Room" %}</h1>
+    <form action="{% url 'rooms:create' %}" method="post">{% csrf_token %}
+        <p class="lead">
+        <input class="btn btn-lg btn-default" type="submit" value="Submit" />
+        </p>
     </form>
+</div>
 {% endblock content %}

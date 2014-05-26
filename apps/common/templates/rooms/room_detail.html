@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% load i18n %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static "css/room_detail.css" %}">
+{% endblock extra_head %}
 {% block title %}
-    {% trans "None and void: " %} {{ object.shorten_url }}
-
+{% trans "None and void: " %} {{ object.shorten_url }}
 {% endblock title %}
-
-
 {% block content %}
 <div class="site-wrapper">
   <div class="site-wrapper-inner">
@@ -23,17 +22,17 @@
         <div class="row">
           <div class="col-md-6">
             <a href="#">
-              <button class="btn btn-default btn-sm">
-                <span class="glyphicon glyphicon-plus"></span>
-                </button>
+            <button class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-plus"></span>
+            </button>
             </a>
           </div>
           <div class="col-md-6">
             <a href="">
-              <button class="btn btn-default btn-sm">
-                <span class="glyphicon glyphicon-trash">
-                </span>
-              </button>
+            <button class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-trash">
+            </span>
+            </button>
             </a>
           </div>
         </div>
@@ -46,61 +45,47 @@
             <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-user"></span></button>
           </div>
           <div class="col-md-9 audio_output" id="me">
-            <video id="local-video" muted></video>
-          </div>
+          <video id="local-video" muted></video>
         </div>
       </div>
-      <div class="col-md-6">
-        <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-eye-close"></span></button>
-      </div>
+    </div>
+    <div class="col-md-6">
+      <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-eye-close"></span></button>
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-    <nav style="display: none;">
-       <ul>
-         <li class="home">
-           <a href="/">
-           </a>
-         </li>
-         <li class="video enabled">
-         </li>
-         <li class="audio enabled">
-         </li>
-         <li class="fullscreen disabled">
-         </li>
-       </ul>
-     </nav>
-     <article class="room" style="display: none;">
-       <div class="message">
-         <p id="allow-media" class="hidden">Please, let us capture your webcam and microphone</p>
-         <p id="share-url" class="hidden">
-           You're the only one in this room. Invite one person by sharing the following url:
-           <input type="text" value="" readonly="readonly">
-         </p>
-         <p id="connecting" class="hidden">Connecting...</p>
-         <p id="error" class="hidden"></p>
-       </div>
-     </article>
+</div>
+<nav style="display: none;">
+<ul>
+  <li class="home">
+    <a href="/">
+    </a>
+  </li>
+  <li class="video enabled">
+  </li>
+  <li class="audio enabled">
+  </li>
+  <li class="fullscreen disabled">
+  </li>
+</ul>
+</nav>
+<article class="room" style="display: none;">
+<div class="message">
+<p id="allow-media" class="hidden">Please, let us capture your webcam and microphone</p>
+<p id="share-url" class="hidden">
+You're the only one in this room. Invite one person by sharing the following url:
+<input type="text" value="" readonly="readonly">
+</p>
+<p id="connecting" class="hidden">Connecting...</p>
+<p id="error" class="hidden"></p>
+</div>
+</article>
 {% endblock content %}
-
 {% block js %}
-    {{ block.super }}
-    <script type="text/javascript" src="{% static "js/microevent.js" %} "></script>
-    <script type="text/javascript" src="{% static "js/webrtc-shim.js" %} "></script>
-    <script type="text/javascript" src="{% static "js/hibuddy_app.js" %} "></script>
-    <script type="text/javascript" src="{% static "js/toolbar.js" %} "></script>
-    <script type="text/javascript" src="{% static "js/app.js" %} "></script>
+{{ block.super }}
+<script type="text/javascript" src="{% static "js/microevent.js" %} "></script>
+<script type="text/javascript" src="{% static "js/webrtc-shim.js" %} "></script>
+<script type="text/javascript" src="{% static "js/hibuddy_app.js" %} "></script>
+<script type="text/javascript" src="{% static "js/toolbar.js" %} "></script>
+<script type="text/javascript" src="{% static "js/app.js" %} "></script>
 {% endblock js %}
-
-
-
-
