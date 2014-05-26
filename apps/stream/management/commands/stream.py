@@ -4,6 +4,7 @@ import asyncio_redis
 import logging.config
 import sse
 from django.core.management.base import BaseCommand
+from ...base import AppProtocol
 from ...events import SignalHandler
 
 
@@ -16,7 +17,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         host, port = '0.0.0.0', os.environ.get('PORT', 8888)
         loop = asyncio.get_event_loop()
-        start_server = sse.serve(SignalHandler, host, port)
+        start_server = sse.serve(SignalHandler, host, port, klass=AppProtocol)
         loop.run_until_complete(start_server)
         logger.info("Server listening on {0}:{1}".format(host, port))
 

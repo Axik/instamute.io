@@ -76,3 +76,37 @@ class Stream(sse.Handler):
         except AssertionError:
             # SSE author is definitely fucking mongoloid
             pass
+
+
+class AppProtocol(sse.protocol.SseServerProtocol):
+    handler = None
+
+    @asyncio.coroutine
+    def handle_request(self, request, payload):
+        handler = self.handler_class(self, request, payload)
+        self.handler = handler
+        try:
+            handler.validate_sse()
+        except sse.exceptions.SseException as e:
+            response = sse.Response(self.transport, e.status)
+            if e.headers:
+                for header in e.headers:
+                    response.add_header(*header)
+            response.send_headers()
+            try:
+                response.write_eof()
+            except:
+                response.transport.write_eof()
+            return
+
+        handler.prepare_response()
+        yield from handler.handle_request()
+        try:
+            handler.response.write_eof()
+        except:
+            handler.response.transport.write_eof()
+
+    def connection_lost(self, exc):
+        super().connection_lost(exc)
+        self.handler.connection_lost(exc)
+        self.handler = None
