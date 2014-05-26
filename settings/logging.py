@@ -24,7 +24,7 @@ LOGGING = {
             'class': 'django.utils.log.NullHandler',
         },
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'standard'
         },
@@ -46,6 +46,12 @@ LOGGING = {
             'level': 'WARN',
         },
         'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+
+        'stream': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': False,

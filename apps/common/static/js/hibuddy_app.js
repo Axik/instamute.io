@@ -1,131 +1,218 @@
 /* globals EventSource, MicroEvent,
    RTCPeerConnection, RTCSessionDescription, RTCIceCandidate */
-
+//todo rename
 function HiBuddyApp(room) {
-  this.room = room;
-  this.me = undefined;
+    this.room = room;
+    this.me = undefined;
 }
 
 HiBuddyApp.prototype = {
-  start: function(stream, callback) {
-    this.stream = stream;
-    this.onRemoteStream = callback;
+    start: function(stream, callback) {
+        this.stream = stream;
+        this.onRemoteStream = callback;
+        this.peers = {};
+        this.config = {
+            iceServers: [{
+                // please contact me if you plan to use this server
+                url: 'turn:webrtc.monkeypatch.me:6424?transport=udp',
+                credential: 'hibuddy',
+                username: 'hibuddy'
+            }]
+        };
+        this.source = new EventSource("http://" + window.location.hostname + ":8888/rooms/" + this.room + "/signalling");
+        this.source.on = this.source.addEventListener.bind(this.source);
+        this.source.on("uid", this._onUID.bind(this));
+        this.source.on("newbuddy", this._onNewBuddy.bind(this));
+        this.source.on("offer", this._onOffer.bind(this));
+        this.source.on("answer", this._onAnswer.bind(this));
+        this.source.on("icecandidate", this._onIceCandidate.bind(this));
+        this.source.on("invite", this._onInvite.bind(this));
+    },
 
-    this.source = new EventSource("http://"+ window.location.hostname +":8888/rooms/" + this.room + "/signalling");
-    this.source.on = this.source.addEventListener.bind(this.source);
-    this.source.on("uid",          this._onUID.bind(this));
-    this.source.on("newbuddy",     this._onNewBuddy.bind(this));
-    this.source.on("offer",        this._onOffer.bind(this));
-    this.source.on("answer",       this._onAnswer.bind(this));
-    this.source.on("icecandidate", this._onIceCandidate.bind(this));
-  },
+    _onUID: function(event) {
+        var message = JSON.parse(event.data);
+        this.me = message.uid;
+        console.log('UID: ' + this.me);
+    },
 
-  _onUID: function(event) {
-    var message = JSON.parse(event.data);
-    this.me = message.uid;
-    console.log('UID: ' + this.me);
-  },
+    _onInvite: function(event) {
+        var message = JSON.parse(event.data);
+        var peerConnection = this._get_or_create_peer(message);
+        peerConnection.from = message.from;
+    },
 
-  _onNewBuddy: function() {
-    var peerConnection = new RTCPeerConnection(this.config);
-    this.peerConnection = this._setupPeerConnection(peerConnection);
-    this._sendOffer();
-    this.trigger("newbuddy");
-  },
+    _onNewBuddy: function(event) {
 
-  _onOffer: function(event) {
-    var message = JSON.parse(event.data);
-    var peerConnection = new RTCPeerConnection(this.config);
+        var peerConnection = new RTCPeerConnection(this.config);
+        var message = JSON.parse(event.data);
+        peerConnection.from = message.uid;
+        peerConnection = this._setupPeerConnection(peerConnection);
+        console.log("New user" + message.uid);
+        this.peers[message.uid] = peerConnection;
+        this._post({
+                type: 'invite',
+                from: this.me,
+                to: message.uid,
+                invite: 'invite'
+            });
+        this._sendOffer(peerConnection, message.uid);
+        this.trigger("newbuddy");
+    },
 
-    this.peerConnection = this._setupPeerConnection(peerConnection);
+    _onOffer: function(event) {
+        var message = JSON.parse(event.data);
+        var peerConnection = new RTCPeerConnection(this.config);
+        this.peers[message.from] = peerConnection;
+        peerConnection.from = message.from;
+        peerConnection = this._setupPeerConnection(peerConnection);
 
-    var offer = new RTCSessionDescription(message.offer);
-    this.peerConnection.setRemoteDescription(offer, function() {
-      this._sendAnswer();
-    }.bind(this));
-  },
+        var offer = new RTCSessionDescription(message.offer);
+        peerConnection.setRemoteDescription(offer, function() {
+            this._sendAnswer(peerConnection, message.from);
+        }.bind(this));
 
-  _onAnswer: function(event) {
-    var message = JSON.parse(event.data);
-    console.log(message.answer);
+    },
 
-    var answer = new RTCSessionDescription(message.answer);
-    this.peerConnection.setRemoteDescription(answer, function() {
-      console.log("done");
-    }.bind(this));
-  },
+    _onAnswer: function(event) {
+        var message = JSON.parse(event.data);
 
-  _onIceCandidate: function(event) {
-    var message = JSON.parse(event.data);
+        var answer = new RTCSessionDescription(message.answer);
+        var peerConnection = this.peers[message.from];
+        console.log('_onAnswer:' + message.from);
+        if (peerConnection === undefined) {return;}
+        peerConnection.setRemoteDescription(answer, function() {
+            console.log("done");
+        }.bind(this));
+    },
 
-    var candidate = new RTCIceCandidate(message.candidate);
-    this.peerConnection.addIceCandidate(candidate);
-  },
+    _onIceCandidate: function(event) {
+        var message = JSON.parse(event.data);
+        console.log('_onIceCandidate:' + message.from);
+        var candidate = new RTCIceCandidate(message.candidate);
+        var peerConnection = this._get_or_create_peer(message);
 
-  _onIceStateChange: function() {
-    // XXX: display an error if the ice connection failed
-    console.log("ice: " + this.peerConnection.iceConnectionState);
-    if (this.peerConnection.iceConnectionState === "failed") {
-      console.error("Something went wrong: the connection failed");
-      this.trigger("failure");
+
+        peerConnection.addIceCandidate(candidate);
+    },
+
+    _get_or_create_peer: function(message){
+        var from = message.from;
+        if (from === undefined){
+            console.error('Fuck IT');
+            return undefined;
+        }
+        var peerConnection = this.peers[from];
+        if (peerConnection === undefined){
+            var _peerConnection = new RTCPeerConnection(this.config);
+            _peerConnection.from = from;
+            peerConnection = this._setupPeerConnection(_peerConnection);
+            this.peers[from] = peerConnection;
+            return peerConnection;
+
+        }
+        return peerConnection;
+    },
+
+    _onIceStateChange: function(peerConnection) {
+        // XXX: display an error if the ice connection failed
+        console.log("ice: " + peerConnection.iceConnectionState);
+        if (peerConnection.iceConnectionState === "failed") {
+            console.error("Something went wrong: the connection failed");
+            this.trigger("failure");
+        }
+
+        if (peerConnection.iceConnectionState === "disconnected") {
+            this.trigger("disconnected");
+//            todo: remove video with peerConnection.from id
+        }
+
+        if (peerConnection.iceConnectionState === "connected"){
+            this.trigger("connected");
+            this._post({
+                    type: 'connected',
+                    from: this.me,
+                answer: 'answer'
+                });
+        }
+
+    },
+
+    _onNewIceCandidate: function(event) {
+        if (event.candidate) {
+            var candidate = {
+                candidate: event.candidate.candidate,
+                sdpMid: event.candidate.sdpMid,
+                sdpMLineIndex: event.candidate.sdpMLineIndex
+            };
+            this._post({
+                type: 'icecandidate',
+                from: this.me,
+                to: event.from,
+                candidate: candidate
+            });
+        }
+    },
+
+    _setupPeerConnection: function(pc) {
+        var closure = function(){
+            this._onIceStateChange(pc);
+        };
+
+        _onAddStream = function(event) {
+            this.onRemoteStream(event.stream, pc.from);
+        };
+
+//        _onRemoveStream = function(){
+//          console.log('removed');
+//        };
+
+        pc.onaddstream = _onAddStream.bind(this);
+        pc.oniceconnectionstatechange = closure.bind(this);
+        pc.onicecandidate = this._onNewIceCandidate.bind(this);
+//        pc.onremovestream = _onRemoveStream.bind(this);
+        pc.addStream(this.stream);
+        return pc;
+    },
+
+    _sendOffer: function(peerConnection, to) {
+        // Create offer
+
+        peerConnection.createOffer(function(offer) {
+            peerConnection.setLocalDescription(offer, function() {
+                // Send offer
+                this._post({
+                    type: 'offer',
+                    from: this.me,
+                    to: to,
+                    offer: offer
+                });
+            }.bind(this));
+        }.bind(this), function() {});
+    },
+
+    _sendAnswer: function(peerConnection, to) {
+        // Create answer
+        peerConnection.createAnswer(function(answer) {
+            peerConnection.setLocalDescription(answer, function() {
+                // Send answer
+                this._post({
+                    type: 'answer',
+                    from: this.me,
+                    to: to,
+                    answer: answer
+                });
+            }.bind(this));
+        }.bind(this), function() {});
+    },
+
+    _post: function(data) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://' + window.location.hostname + ':8000/rooms/' + this.room + '/signalling', true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.send(JSON.stringify(data));
     }
-
-    if (this.peerConnection.iceConnectionState === "connected")
-      this.trigger("connected");
-  },
-
-  _onNewIceCandidate: function(event) {
-    if (event.candidate) {
-      var candidate = {
-        candidate: event.candidate.candidate,
-        sdpMid: event.candidate.sdpMid,
-        sdpMLineIndex: event.candidate.sdpMLineIndex
-      };
-      this._post({type: 'icecandidate', from: this.me, candidate: candidate});
-    }
-  },
-
-  _onAddStream: function(event) {
-    this.onRemoteStream(event.stream);
-  },
-
-  _setupPeerConnection: function(pc) {
-    pc.onaddstream = this._onAddStream.bind(this);
-    pc.oniceconnectionstatechange = this._onIceStateChange.bind(this);
-    pc.onicecandidate = this._onNewIceCandidate.bind(this);
-    pc.addStream(this.stream);
-    return pc;
-  },
-
-  _sendOffer: function() {
-    // Create offer
-    this.peerConnection.createOffer(function(offer) {
-      this.peerConnection.setLocalDescription(offer, function() {
-        // Send offer
-        this._post({type: 'offer', from: this.me, offer: offer});
-      }.bind(this));
-    }.bind(this), function() {});
-  },
-
-  _sendAnswer: function() {
-    // Create answer
-    this.peerConnection.createAnswer(function(answer) {
-      this.peerConnection.setLocalDescription(answer, function() {
-        // Send answer
-        this._post({type: 'answer', from: this.me, answer: answer});
-      }.bind(this));
-    }.bind(this), function() {});
-  },
-
-  _post: function(data) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://'+ window.location.hostname +':8000/rooms/' + this.room + '/signalling', true);
-    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    xhr.send(JSON.stringify(data));
-  }
 
 };
 
 MicroEvent.mixin(HiBuddyApp);
 HiBuddyApp.prototype.on = HiBuddyApp.prototype.bind;
-

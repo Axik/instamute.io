@@ -1,19 +1,18 @@
 import re
-import pickle
 import uuid
 import json
 import asyncio
 import logging.config
 from .base import Stream
 from .exceptions import NotFound
+from django.contrib.webdesign import lorem_ipsum
 
 
 logger = logging.getLogger(__name__)
 
-logging.basicConfig(level='INFO', format='%(message)s')
-
 
 class SignalHandler(Stream):
+    me = None
 
     def get_param(self):
         param = re.match('/rooms/([\w\d]+)/signalling', self.request.path)
@@ -24,14 +23,19 @@ class SignalHandler(Stream):
     @asyncio.coroutine
     def get(self):
         room = self.get_param()
-        uid = uuid.uuid4().hex
+        # uid = uuid.uuid4().hex
+        uid = lorem_ipsum.words(1, False).upper()
+        self.me = uid
         data = dict(type='uid', uid=uid)
+        data['from'] = uid
         self.send(data, event='uid' )
-        yield from self.redis.publish(room, json.dumps((data, 'newbuddy')))
+
+        connection = yield from self.get_connection()
+        yield from connection.publish(room, json.dumps((data, 'newbuddy')))
 
         self.heartbeat()
         logger.info('New participant was published with uid={}'.format(uid))
-        subscriber = yield from self.redis.start_subscribe()
+        subscriber = yield from connection.start_subscribe()
 
         # Subscribe to channel.
         yield from subscriber.subscribe([room])
@@ -40,7 +44,22 @@ class SignalHandler(Stream):
         while True:
             reply = yield from subscriber.next_published()
             data, event = json.loads(reply.value)
-            if data.get('from', '') == uid:
+            sender = data.get('from', '')
+            to = data.get('to', '')
+            if sender == uid:
                 continue
+            if to and to != self.me:
+                continue
+
             self.send(data, event=event)
             logger.info('Transmitted: %s from chanel %s', repr(event), reply.channel)
+
+    @asyncio.coroutine
+    def get_connection(self):
+        while True:
+            connection = self.redis._get_free_connection()
+            if not connection:
+                yield from asyncio.sleep(0.001)
+            else:
+                yield
+                return connection
