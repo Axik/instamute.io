@@ -9,23 +9,27 @@
 {% endblock title %}
 {% block content %}
 <div class="row headroom">
+  <h4>{% trans "Copy this link to share this room with your mates" %}</h4>
   <div class="col-md-6 col-md-offset-3">
-    <div class="form-group">
-      <label for="copy_link">{% trans "Copy link below to share this room with your mates" %}</label>
-      <input id="copy_link" type="text" disabled value="{{ request.build_absolute_uri }}">
-      <button class="btn btn-default btn-sm" id="copy_link_button"><span class="glyphicon glyphicon-link"></span></button>
+    <div class="input-group">
+      <input name="copy_link" type="text" disabled value="{{ request.build_absolute_uri }}" class="form-control">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" >
+          <span class="glyphicon glyphicon-link"></span>
+        </button>
+      </span>
     </div>
   </div>
   <div class="col-md-3">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-3 col-md-offset-6">
         <a href="#">
         <button class="btn btn-default btn-sm">
         <span class="glyphicon glyphicon-plus"></span>
         </button>
         </a>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-2 col-md-offset-1">
         <a href="">
         <button class="btn btn-default btn-sm">
         <span class="glyphicon glyphicon-trash">
