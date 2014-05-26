@@ -27,6 +27,7 @@ HiBuddyApp.prototype = {
         this.source.on("answer", this._onAnswer.bind(this));
         this.source.on("icecandidate", this._onIceCandidate.bind(this));
         this.source.on("invite", this._onInvite.bind(this));
+        this.source.on("dropped", this._onDropped.bind(this));
     },
 
     _onUID: function(event) {
@@ -39,6 +40,13 @@ HiBuddyApp.prototype = {
         var message = JSON.parse(event.data);
         var peerConnection = this._get_or_create_peer(message);
         peerConnection.from = message.from;
+    },
+
+    _onDropped: function(event) {
+        var message = JSON.parse(event.data);
+        from = message.from;
+        delete this.peers[from];
+        this.trigger("dropped", from);
     },
 
     _onNewBuddy: function(event) {
