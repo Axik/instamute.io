@@ -11,7 +11,8 @@
     var shareUrl = document.getElementById('share-url');
     var connecting = document.getElementById('connecting');
     var error = document.getElementById('error');
-    var parent_div = document.getElementById('videos')
+    var parent_div = document.getElementById('videos');
+    var stream_proto = document.getElementById('my_stream');
 
     shareUrl.querySelector("input").value = window.location;
 // todo: figure out with this
@@ -48,16 +49,13 @@
 
         hibuddy.start(localStream, function(remoteStream, from) {
 
-//            todo: imporove this!!!
-            var div = document.createElement('div');
-            div.class="col-xs-6 col-md-3";
-
-            var video_tab = document.createElement('video');
-            video_tab.id = from;
-            div.appendChild(video_tab);
-            parent_div.appendChild(div);
-            video_tab.src = URL.createObjectURL(remoteStream);
-            video_tab.play();
+            var stream_clone = stream_proto.cloneNode(true);
+            stream_clone.id = from;
+            var video_input =  stream_clone.querySelector('#local-video');
+            video_input.id = from;
+            parent_div.appendChild(stream_clone);
+            video_input.src = URL.createObjectURL(remoteStream);
+            video_input.play();
         });
 
     }, function(err) {
