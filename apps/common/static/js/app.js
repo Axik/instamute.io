@@ -38,7 +38,7 @@
 
 
     navigator.getUserMedia({
-        video: true,
+        video: false,
         audio: true
     }, function(localStream) {
         var el = document.querySelector("nav");
