@@ -6,19 +6,17 @@ function HiBuddyApp(room) {
     this.me = undefined;
 }
 
+var peer_config = {};
+
+window.turnserversDotComAPI.iceServers(function(data) {
+    peer_config = data;
+});
+
 HiBuddyApp.prototype = {
     start: function(stream, callback) {
         this.stream = stream;
         this.onRemoteStream = callback;
         this.peers = {};
-        this.config = {
-            iceServers: [{
-                // please contact me if you plan to use this server
-                url: 'turn:webrtc.monkeypatch.me:6424?transport=udp',
-                credential: 'hibuddy',
-                username: 'hibuddy'
-            }]
-        };
         this.source = new EventSource("http://" + window.location.hostname + ":8888/rooms/" + this.room + "/signalling");
         this.source.on = this.source.addEventListener.bind(this.source);
         this.source.on("uid", this._onUID.bind(this));
@@ -27,6 +25,7 @@ HiBuddyApp.prototype = {
         this.source.on("answer", this._onAnswer.bind(this));
         this.source.on("icecandidate", this._onIceCandidate.bind(this));
         this.source.on("invite", this._onInvite.bind(this));
+        this.source.on("dropped", this._onDropped.bind(this));
     },
 
     _onUID: function(event) {
@@ -41,9 +40,16 @@ HiBuddyApp.prototype = {
         peerConnection.from = message.from;
     },
 
+    _onDropped: function(event) {
+        var message = JSON.parse(event.data);
+        from = message.from;
+        delete this.peers[from];
+        this.trigger("dropped", from);
+    },
+
     _onNewBuddy: function(event) {
 
-        var peerConnection = new RTCPeerConnection(this.config);
+        var peerConnection = new RTCPeerConnection(peer_config);
         var message = JSON.parse(event.data);
         peerConnection.from = message.uid;
         peerConnection = this._setupPeerConnection(peerConnection);
@@ -61,7 +67,7 @@ HiBuddyApp.prototype = {
 
     _onOffer: function(event) {
         var message = JSON.parse(event.data);
-        var peerConnection = new RTCPeerConnection(this.config);
+        var peerConnection = new RTCPeerConnection(peer_config);
         this.peers[message.from] = peerConnection;
         peerConnection.from = message.from;
         peerConnection = this._setupPeerConnection(peerConnection);
@@ -103,7 +109,7 @@ HiBuddyApp.prototype = {
         }
         var peerConnection = this.peers[from];
         if (peerConnection === undefined){
-            var _peerConnection = new RTCPeerConnection(this.config);
+            var _peerConnection = new RTCPeerConnection(peer_config);
             _peerConnection.from = from;
             peerConnection = this._setupPeerConnection(_peerConnection);
             this.peers[from] = peerConnection;

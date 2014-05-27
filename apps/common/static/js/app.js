@@ -30,6 +30,11 @@
         error.textContent = failure;
     });
 
+    hibuddy.on("dropped", function(from) {
+        console.log('On drop' + from);
+        document.getElementById(from).remove();
+    });
+
 
     navigator.getUserMedia({
         video: false,
