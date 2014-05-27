@@ -34,10 +34,10 @@ class SignalHandler(Stream):
         connection = yield from self.get_connection()
         yield from connection.publish(self.room, json.dumps((data, 'newbuddy')))
 
-        self.heartbeat()
-        logger.info('New participant was published with uid={}'.format(uid))
+        self.schedule_heartbeat()
+        logger.debug('New participant was published with uid={}'.format(uid))
         subscriber = yield from connection.start_subscribe()
-
+        self.subscriber = subscriber
         # Subscribe to channel.
         yield from subscriber.subscribe([self.room])
 
@@ -76,3 +76,4 @@ class SignalHandler(Stream):
             yield from connection.publish(self.room, json.dumps((data, 'dropped')))
 
         asyncio.async(drop())
+        self.subscriber.close()

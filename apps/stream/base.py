@@ -45,13 +45,14 @@ class Stream(sse.Handler):
                         return True
         raise sse.exceptions.NotAcceptable()
 
-    def heartbeat(self):
+    def schedule_heartbeat(self):
         # Need be carefully with CPython garbage collection
         wself = weakref.ref(self)
         def _heartbeat():
             handler = wself()
             if not handler:
                 return
+            logger.debug('Sending heartbeat')
             handler.send('', event='heartbeat')
         loop = asyncio.get_event_loop()
         loop.call_later(2000, _heartbeat)
