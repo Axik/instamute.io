@@ -9,6 +9,7 @@
     var shareUrl = document.getElementById('share-url');
     var error = document.getElementById('error');
     var parent_div = document.getElementById('videos');
+    var stream_proto = document.getElementById('my_stream');
 
     // todo: figure out with this
     // function display(element) {
@@ -24,9 +25,7 @@
     //        console.log("newbuddy");
     //
     //    });
-    hibuddy.on("connected", function() {
-        allowMedia.classList.add("hidden");
-    });
+    hibuddy.on("connected", function() {});
     hibuddy.on("failure", function(failure) {
         error.textContent = failure;
     });
