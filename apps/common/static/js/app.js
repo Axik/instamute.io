@@ -38,7 +38,7 @@
 
     hibuddy.on("dropped", function(from) {
         console.log('On drop' + from);
-//        todo: remove element
+        document.getElementById(from).remove();
     });
 
 
