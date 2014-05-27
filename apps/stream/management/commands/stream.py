@@ -1,7 +1,7 @@
 import os
 import asyncio
 import asyncio_redis
-import logging.config
+import logging
 import sse
 from django.core.management.base import BaseCommand
 from ...base import AppProtocol

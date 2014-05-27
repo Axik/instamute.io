@@ -6,19 +6,17 @@ function HiBuddyApp(room) {
     this.me = undefined;
 }
 
+var peer_config = {};
+
+window.turnserversDotComAPI.iceServers(function(data) {
+    peer_config = data;
+});
+
 HiBuddyApp.prototype = {
     start: function(stream, callback) {
         this.stream = stream;
         this.onRemoteStream = callback;
         this.peers = {};
-        this.config = {
-            iceServers: [{
-                // please contact me if you plan to use this server
-                url: 'turn:webrtc.monkeypatch.me:6424?transport=udp',
-                credential: 'hibuddy',
-                username: 'hibuddy'
-            }]
-        };
         this.source = new EventSource("http://" + window.location.hostname + ":8888/rooms/" + this.room + "/signalling");
         this.source.on = this.source.addEventListener.bind(this.source);
         this.source.on("uid", this._onUID.bind(this));
@@ -51,7 +49,7 @@ HiBuddyApp.prototype = {
 
     _onNewBuddy: function(event) {
 
-        var peerConnection = new RTCPeerConnection(this.config);
+        var peerConnection = new RTCPeerConnection(peer_config);
         var message = JSON.parse(event.data);
         peerConnection.from = message.uid;
         peerConnection = this._setupPeerConnection(peerConnection);
@@ -69,7 +67,7 @@ HiBuddyApp.prototype = {
 
     _onOffer: function(event) {
         var message = JSON.parse(event.data);
-        var peerConnection = new RTCPeerConnection(this.config);
+        var peerConnection = new RTCPeerConnection(peer_config);
         this.peers[message.from] = peerConnection;
         peerConnection.from = message.from;
         peerConnection = this._setupPeerConnection(peerConnection);
@@ -111,7 +109,7 @@ HiBuddyApp.prototype = {
         }
         var peerConnection = this.peers[from];
         if (peerConnection === undefined){
-            var _peerConnection = new RTCPeerConnection(this.config);
+            var _peerConnection = new RTCPeerConnection(peer_config);
             _peerConnection.from = from;
             peerConnection = this._setupPeerConnection(_peerConnection);
             this.peers[from] = peerConnection;
