@@ -57,37 +57,11 @@
     </div>
   </div>
 </div>
-<nav style="display: none;">
-<ul>
-  <li class="home">
-    <a href="/">
-    </a>
-  </li>
-  <li class="video enabled">
-  </li>
-  <li class="audio enabled">
-  </li>
-  <li class="fullscreen disabled">
-  </li>
-</ul>
-</nav>
-<article class="room" style="display: none;">
-<div class="message">
-<p id="allow-media" class="hidden">Please, let us capture your webcam and microphone</p>
-<p id="share-url" class="hidden">
-You're the only one in this room. Invite one person by sharing the following url:
-<input type="text" value="" readonly="readonly">
-</p>
-<p id="connecting" class="hidden">Connecting...</p>
-<p id="error" class="hidden"></p>
-</div>
-</article>
 {% endblock content %}
 {% block js %}
 {{ block.super }}
 <script type="text/javascript" src="{% static "js/microevent.js" %} "></script>
 <script type="text/javascript" src="{% static "js/webrtc-shim.js" %} "></script>
 <script type="text/javascript" src="{% static "js/hibuddy_app.js" %} "></script>
-<script type="text/javascript" src="{% static "js/toolbar.js" %} "></script>
 <script type="text/javascript" src="{% static "js/app.js" %} "></script>
 {% endblock js %}
