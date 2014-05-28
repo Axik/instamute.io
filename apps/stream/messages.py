@@ -40,27 +40,35 @@ class MessageDispatcher(object):
             for q in self.queues[reply.channel]:
                 q.put_nowait(reply.value)
 
-    def register(self, chanel):
+    @asyncio.coroutine
+    def register(self, channel):
         """
         Handler usage:
-        >>> chanel = dispatcher.register('foo')
-        >>> yield from chanel.get()
-        >>> chanel.close()
+        >>> channel = yield from dispatcher.register('foo')
+        >>> yield from channel.get()
+        >>> channel.close()
         """
         q = Queue()
-        self.queues[chanel].append(q)
-        self.subscription.subscribe([chanel])
+        self.queues[channel].append(q)
+
+        yield from self.subscription.subscribe([channel])
 
         def free(*a, **k):
             """
             Stop serving client
             """
-            queues = self.queues[chanel]
+            queues = self.queues[channel]
             queues.remove(q)
             if not queues:
-                self.subscription.unsubscribe(chanel)
-                del self.queues[chanel]
-                logger.debug('%s chanel was released', chanel)
-
+                yield from self.subscription.unsubscribe([channel])
+                del self.queues[channel]
+                logger.info('%s chanel was released', channel)
         q.close = free
         return q
+
+    def send_local(self, channel, msg):
+        """
+        Acceptable only for sibling handlers - inside the same UNIX process
+        """
+        for q in self.queues[channel]:
+            q.put_nowait(msg)
