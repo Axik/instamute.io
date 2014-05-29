@@ -1,27 +1,35 @@
 import json
-from django.views.generic import CreateView, DetailView, View
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
+import string
+import random
 import django_rq
+from django.views.generic import CreateView, DetailView, View
+from django.shortcuts import redirect
+from django.http import HttpResponse,Http404
+from django.core.urlresolvers import reverse_lazy
+from .models import Room
+
 
 redis_client = django_rq.get_connection()
 
 
-import short_url
-
-from .models import Room
-
-
 class RoomCreateView(CreateView):
     model = Room
+
+    def form_valid(self, *args, **kwargs):
+        rid = ''.join(random.choice(string.ascii_lowercase) for _ in range(5))
+        redis_client.set(rid, 1)
+        return redirect(reverse_lazy('rooms:detail', kwargs={'shorten_id': rid}))
 
 
 class RoomDetailView(DetailView):
     model = Room
 
     def get_object(self):
-        decoded_id = short_url.decode_url(self.kwargs.get('shorten_id'))
-        return get_object_or_404(self.model, **{'id': decoded_id})
+        rid = self.kwargs.get('shorten_id')
+        room = redis_client.get(rid)
+        if room is None:
+            raise Http404('Room not found')
+        return room
 
 
 class SignalingUpdate(View):
