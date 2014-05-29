@@ -2,7 +2,7 @@
 
 (function() {
     var room = window.location.pathname.split('/')[2];
-    var hibuddy = new VoiceApp(room);
+    var voice_app = new VoiceApp(room);
 
     var localAudio = document.getElementById('local-audio');
     var allowMedia = document.getElementById('allow-media');
@@ -11,26 +11,12 @@
     var parent_div = document.getElementById('videos');
     var stream_proto = document.getElementById('my_stream');
 
-    // todo: figure out with this
-    // function display(element) {
-    //   var elements = [allowMedia, shareUrl, connecting, remoteVideo, error];
-    //   elements.forEach(function(elem) {
-    //     if (element !== elem)
-    //       elem.classList.add("hidden");
-    //   });
-    //   element.classList.remove("hidden");
-    // }
-
-    //    hibuddy.on("newbuddy", function() {
-    //        console.log("newbuddy");
-    //
-    //    });
-    hibuddy.on("connected", function() {});
-    hibuddy.on("failure", function(failure) {
+    voice_app.on("connected", function() {});
+    voice_app.on("failure", function(failure) {
         error.textContent = failure;
     });
 
-    hibuddy.on("dropped", function(from) {
+    voice_app.on("dropped", function(from) {
         console.log('On drop' + from);
         document.getElementById(from).remove();
     });
@@ -45,7 +31,7 @@
         localAudio.src = URL.createObjectURL(localStream);
         localAudio.play();
 
-        hibuddy.start(localStream, function(remoteStream, from) {
+        voice_app.start(localStream, function(remoteStream, from) {
 
             var stream_clone = stream_proto.cloneNode(true);
             stream_clone.id = from;
@@ -53,7 +39,7 @@
             audio_input.id = from;
             parent_div.appendChild(stream_clone);
             audio_input.src = URL.createObjectURL(remoteStream);
-            audio_input.removeAttribute("muted")
+            audio_input.removeAttribute("muted");
             audio_input.play();
         });
 

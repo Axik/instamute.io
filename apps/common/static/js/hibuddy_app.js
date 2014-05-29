@@ -118,10 +118,6 @@ VoiceApp.prototype = {
 
     _get_or_create_peer: function(message){
         var from = message.from;
-        if (from === undefined){
-            console.error('Fuck IT');
-            return undefined;
-        }
         var peerConnection = this.peers[from];
         if (peerConnection === undefined){
             var _peerConnection = new RTCPeerConnection(peer_config);
@@ -144,7 +140,6 @@ VoiceApp.prototype = {
 
         if (peerConnection.iceConnectionState === "disconnected") {
             this.trigger("disconnected");
-//            todo: remove video with peerConnection.from id
         }
 
         if (peerConnection.iceConnectionState === "connected"){
@@ -155,7 +150,6 @@ VoiceApp.prototype = {
                 answer: 'answer'
                 });
         }
-
     },
 
     _onNewIceCandidate: function(event) {
@@ -183,21 +177,15 @@ VoiceApp.prototype = {
             this.onRemoteStream(event.stream, pc.from);
         };
 
-//        _onRemoveStream = function(){
-//          console.log('removed');
-//        };
-
         pc.onaddstream = _onAddStream.bind(this);
         pc.oniceconnectionstatechange = closure.bind(this);
         pc.onicecandidate = this._onNewIceCandidate.bind(this);
-//        pc.onremovestream = _onRemoveStream.bind(this);
         pc.addStream(this.stream);
         return pc;
     },
 
     _sendOffer: function(peerConnection, to) {
         // Create offer
-
         peerConnection.createOffer(function(offer) {
             peerConnection.setLocalDescription(offer, function() {
                 // Send offer

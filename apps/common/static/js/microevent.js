@@ -51,7 +51,7 @@ MicroEvent.mixin = function(destObject){
 			destObject[props[i]] = MicroEvent.prototype[props[i]];
 		}
 	}
-}
+};
 
 // export in common js
 if( typeof module !== "undefined" && ('exports' in module)){
