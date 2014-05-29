@@ -1,8 +1,8 @@
-/* globals HiBuddyApp */
+/* globals VoiceApp */
 
 (function() {
     var room = window.location.pathname.split('/')[2];
-    var hibuddy = new HiBuddyApp(room);
+    var hibuddy = new VoiceApp(room);
 
     var localAudio = document.getElementById('local-audio');
     var allowMedia = document.getElementById('allow-media');

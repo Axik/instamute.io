@@ -1,7 +1,22 @@
 /* globals EventSource, MicroEvent,
    RTCPeerConnection, RTCSessionDescription, RTCIceCandidate */
-//todo rename
-function HiBuddyApp(room) {
+(function(window, navigator) {
+  navigator.getUserMedia = (navigator.getUserMedia       ||
+                            navigator.mozGetUserMedia    ||
+                            navigator.webkitGetUserMedia);
+  window.RTCSessionDescription = (window.RTCSessionDescription    ||
+                                  window.mozRTCSessionDescription ||
+                                  window.webkitRTCSessionDescription);
+  window.RTCIceCandidate = (window.RTCIceCandidate    ||
+                            window.mozRTCIceCandidate ||
+                            window.webkitRTCIceCandidate);
+  window.RTCPeerConnection =  (window.RTCPeerConnection    ||
+                               window.mozRTCPeerConnection ||
+                               window.webkitRTCPeerConnection);
+}(window, navigator));
+
+
+function VoiceApp(room) {
     this.room = room;
     this.me = undefined;
 }
@@ -12,7 +27,7 @@ window.turnserversDotComAPI.iceServers(function(data) {
     peer_config = data;
 });
 
-HiBuddyApp.prototype = {
+VoiceApp.prototype = {
     start: function(stream, callback) {
         this.stream = stream;
         this.onRemoteStream = callback;
@@ -220,5 +235,5 @@ HiBuddyApp.prototype = {
 
 };
 
-MicroEvent.mixin(HiBuddyApp);
-HiBuddyApp.prototype.on = HiBuddyApp.prototype.bind;
+MicroEvent.mixin(VoiceApp);
+VoiceApp.prototype.on = VoiceApp.prototype.bind;

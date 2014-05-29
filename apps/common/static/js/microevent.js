@@ -42,7 +42,7 @@ MicroEvent.prototype	= {
  *
  * @param {Object} the object which will support MicroEvent
 */
-MicroEvent.mixin	= function(destObject){
+MicroEvent.mixin = function(destObject){
 	var props	= ['bind', 'unbind', 'trigger'];
 	for(var i = 0; i < props.length; i ++){
 		if( typeof destObject === 'function' ){
