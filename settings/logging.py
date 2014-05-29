@@ -53,7 +53,7 @@ LOGGING = {
 
         'stream': {
             'handlers': ['console'],
-            'level': 'WARN',
+            'level': 'INFO',
             'propagate': False,
         },
     }

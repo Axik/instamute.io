@@ -2,6 +2,7 @@ import weakref
 import asyncio
 import logging
 import sse
+from django.conf import settings
 from .exceptions import MethodNotAllowed
 
 
@@ -10,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 class Stream(sse.Handler):
     redis = None
+    dispatcher = None
     http_method_names = ['get',]
 
     @asyncio.coroutine
@@ -77,6 +79,32 @@ class Stream(sse.Handler):
         except AssertionError:
             # SSE author is definitely fucking mongoloid
             pass
+
+    @asyncio.coroutine
+    def get_connection(self):
+        while True:
+            connection = self.redis._get_free_connection()
+            if not connection:
+                yield from asyncio.sleep(0.001)
+            else:
+                yield
+                return connection
+
+    @asyncio.coroutine
+    def publish(self, room, data):
+        if settings.STREAM_SCALE == 1:
+            yield from self.publish_to_locals(room, data)
+        else:
+            yield from self.publish_to_redis(room, data)
+
+    @asyncio.coroutine
+    def publish_to_redis(self, room, data):
+        connection = yield from self.get_connection()
+        yield from connection.publish(room, data)
+
+    @asyncio.coroutine
+    def publish_to_locals(self, room, data):
+        yield from self.dispatcher.send_local(room, data)
 
 
 class AppProtocol(sse.protocol.SseServerProtocol):

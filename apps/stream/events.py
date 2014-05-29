@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 class SignalHandler(Stream):
     me = None
     room = None
+    channel = None # message chanel
 
     def get_param(self):
         param = re.match('/rooms/([\w\d]+)/signalling', self.request.path)
@@ -31,20 +32,16 @@ class SignalHandler(Stream):
         data['from'] = uid
         self.send(data, event='uid' )
 
-        connection = yield from self.get_connection()
-        yield from connection.publish(self.room, json.dumps((data, 'newbuddy')))
+        yield from self.publish(self.room, json.dumps((data, 'newbuddy')))
 
         self.schedule_heartbeat()
         logger.debug('New participant was published with uid={}'.format(uid))
-        subscriber = yield from connection.start_subscribe()
-        self.subscriber = subscriber
-        # Subscribe to channel.
-        yield from subscriber.subscribe([self.room])
+        self.channel = yield from self.dispatcher.register(self.room)
 
         # Inside a while loop, wait for incoming events.
         while True:
-            reply = yield from subscriber.next_published()
-            data, event = json.loads(reply.value)
+            value = yield from self.channel.get()
+            data, event = json.loads(value)
             sender = data.get('from', '')
             to = data.get('to', '')
             if sender == uid:
@@ -53,17 +50,7 @@ class SignalHandler(Stream):
                 continue
 
             self.send(data, event=event)
-            logger.info('Transmitted: %s from chanel %s', repr(event), reply.channel)
-
-    @asyncio.coroutine
-    def get_connection(self):
-        while True:
-            connection = self.redis._get_free_connection()
-            if not connection:
-                yield from asyncio.sleep(0.001)
-            else:
-                yield
-                return connection
+            logger.info('Transmitted: %s from message chanel %s', repr(event), self.room)
 
     def connection_lost(self, exc):
         logger.warning('Dropping connection')
@@ -72,8 +59,6 @@ class SignalHandler(Stream):
 
         @asyncio.coroutine
         def drop():
-            connection = yield from self.get_connection()
-            yield from connection.publish(self.room, json.dumps((data, 'dropped')))
-
+            yield from self.channel.close()
+            yield from self.publish(self.room, json.dumps((data, 'dropped')))
         asyncio.async(drop())
-        self.subscriber.close()
