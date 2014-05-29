@@ -42,18 +42,31 @@
 </div>
 <div class="row" id="videos">
   <div class="row" id="my_stream">
-    <div class="col-md-6">
+    <div class="col-md-12">
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-1">
           <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-user"></span></button>
         </div>
-        <div class="col-md-9 audio_output">
-          <audio id="local-audio" muted controls></audio>
+          <audio id="local-audio" hidden step="0.01" min="0" max="1"></audio>
+        <div class="col-md-2 col-md-offset-1">
+          <button class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-volume-down"></span>
+          </button>
+        </div>
+        <div class="col-md-4">
+          <input id="volume_range" type="range"step="0.01" min="0" max="1" value="1" onchange="setVolume(this)" />
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-volume-up"></span>
+          </button>
+        </div>
+        <div class="col-md-1 col-md-offset-1">
+          <button class="btn btn-default btn-sm" id="playpause" onclick="togglePlayPause(this)">
+            <span class="glyphicon glyphicon glyphicon-off"></span>
+          </button>
         </div>
       </div>
-    </div>
-    <div class="col-md-6">
-      <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-eye-close"></span></button>
     </div>
   </div>
 </div>
@@ -65,4 +78,6 @@
 <script type="text/javascript" src="{% static "js/webrtc-shim.js" %} "></script>
 <script type="text/javascript" src="{% static "js/hibuddy_app.js" %} "></script>
 <script type="text/javascript" src="{% static "js/app.js" %} "></script>
+<script type="text/javascript" src="{% static "js/mediaplayer.js" %} "></script>
+<script type="text/javascript" src="{% static "js/room_detail.js" %} "></script>
 {% endblock js %}
