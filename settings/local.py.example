@@ -88,3 +88,5 @@ RQ_QUEUES = {
         'PASSWORD': '',
     },
 }
+
+STREAM_SCALE = 1

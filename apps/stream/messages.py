@@ -66,9 +66,11 @@ class MessageDispatcher(object):
         q.close = free
         return q
 
+    @asyncio.coroutine
     def send_local(self, channel, msg):
         """
         Acceptable only for sibling handlers - inside the same UNIX process
         """
         for q in self.queues[channel]:
             q.put_nowait(msg)
+        yield

@@ -15,7 +15,6 @@ class SignalHandler(Stream):
     me = None
     room = None
     channel = None # message chanel
-    dispatcher = None
 
     def get_param(self):
         param = re.match('/rooms/([\w\d]+)/signalling', self.request.path)
@@ -52,21 +51,6 @@ class SignalHandler(Stream):
 
             self.send(data, event=event)
             logger.info('Transmitted: %s from message chanel %s', repr(event), self.room)
-
-    @asyncio.coroutine
-    def get_connection(self):
-        while True:
-            connection = self.redis._get_free_connection()
-            if not connection:
-                yield from asyncio.sleep(0.001)
-            else:
-                yield
-                return connection
-
-    @asyncio.coroutine
-    def publish(self, room, data):
-        connection = yield from self.get_connection()
-        yield from connection.publish(room, data)
 
     def connection_lost(self, exc):
         logger.warning('Dropping connection')

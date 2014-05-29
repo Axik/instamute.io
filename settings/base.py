@@ -117,3 +117,5 @@ try:
     from .local import *
 except ImportError:
     pass
+
+STREAM_SCALE = 1

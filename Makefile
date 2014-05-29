@@ -47,7 +47,6 @@ run:
 	@python manage.py runserver
 
 stream:
-	@sysctl fs.file-max
 	@python manage.py stream
 
 runpub:

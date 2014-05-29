@@ -4,6 +4,7 @@ import asyncio_redis
 import logging
 import sse
 from django.core.management.base import BaseCommand
+from django.conf import settings
 from ...base import AppProtocol
 from ...events import SignalHandler
 from ...messages import MessageDispatcher
@@ -22,7 +23,7 @@ class Command(BaseCommand):
         loop.run_until_complete(start_server)
         logger.info("Server listening on {0}:{1}".format(host, port))
 
-        pool_size = os.environ.get('POOL_SIZE', 100)
+        pool_size = os.environ.get('POOL_SIZE', 10)
         redis_pool = create_pooling(host='localhost', port=6379, poolsize=pool_size)
         loop.run_until_complete(redis_pool)
         logger.info("Redis pool initialized with pool_size={}".format(pool_size))
@@ -30,6 +31,7 @@ class Command(BaseCommand):
         channels = create_channels(connection=SignalHandler.redis, loop=loop)
         loop.run_until_complete(channels)
         logger.info("Message dispatcher was initialized")
+        logger.info("Message chanel policy: [{}]".format('LOCAL' if settings.STREAM_SCALE==1 else 'GLOBAL'))
 
         loop.run_forever()
 
