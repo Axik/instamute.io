@@ -3,18 +3,14 @@
 (function() {
     var room = window.location.pathname.split('/')[2];
     var hibuddy = new HiBuddyApp(room);
-    var toolbar;
 
-    var localVideo = document.getElementById('local-audio');
-    var remoteVideo = document.getElementById('remote-video');
+    var localAudio = document.getElementById('local-audio');
     var allowMedia = document.getElementById('allow-media');
     var shareUrl = document.getElementById('share-url');
-    var connecting = document.getElementById('connecting');
     var error = document.getElementById('error');
     var parent_div = document.getElementById('videos');
     var stream_proto = document.getElementById('my_stream');
 
-    shareUrl.querySelector("input").value = window.location;
     // todo: figure out with this
     // function display(element) {
     //   var elements = [allowMedia, shareUrl, connecting, remoteVideo, error];
@@ -29,9 +25,7 @@
     //        console.log("newbuddy");
     //
     //    });
-    hibuddy.on("connected", function() {
-        allowMedia.classList.add("hidden");
-    });
+    hibuddy.on("connected", function() {});
     hibuddy.on("failure", function(failure) {
         error.textContent = failure;
     });
@@ -47,10 +41,9 @@
         audio: true
     }, function(localStream) {
         var el = document.querySelector("nav");
-        var toolbar = new HiBuddyToolbar(el, localStream);
 
-        localVideo.src = URL.createObjectURL(localStream);
-        localVideo.play();
+        localAudio.src = URL.createObjectURL(localStream);
+        localAudio.play();
 
         hibuddy.start(localStream, function(remoteStream, from) {
 
