@@ -1,6 +1,6 @@
 function togglePlayPause(button) {
     var audio = button.parentNode.parentNode.querySelector("audio")
-    var playpause = document.getElementById(button.id);
+    var playpause = button
     if (audio.paused || audio.ended) {
         playpause.title = "pause";
         playpause.className = "btn btn-danger btn-lg"
