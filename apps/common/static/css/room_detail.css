@@ -6,3 +6,19 @@
 #videos {
     margin-top: 10%;
 }
+
+.slider,
+input[type="range"] {
+    margin-top: 5%;
+}
+
+.btn-tt {
+    border-radius: 4px;
+}
+.btn-tt > .glyphicon{
+    font-size: 21px;
+}
+.slider-handle{
+    background: #415C85;
+    opacity: 1;
+}
