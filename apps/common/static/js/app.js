@@ -10,6 +10,7 @@
     var error = document.getElementById('error');
     var parent_div = document.getElementById('videos');
     var stream_proto = document.getElementById('my_stream');
+    var mute_me = document.getElementById('mute_me');
 
     voice_app.on("connected", function() {});
     voice_app.on("failure", function(failure) {
@@ -30,7 +31,13 @@
 
         localAudio.src = URL.createObjectURL(localStream);
         localAudio.play();
-
+        mutter = function(){
+              var audioTracks = localStream.getAudioTracks();
+              for (var i = 0, l = audioTracks.length; i < l; i++) {
+                audioTracks[i].enabled = !audioTracks[i].enabled;
+              }
+        };
+        mute_me.onclick = mutter;
         voice_app.start(localStream, function(remoteStream, from) {
 
             var stream_clone = stream_proto.cloneNode(true);
