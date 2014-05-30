@@ -13,6 +13,9 @@ class Stream(sse.Handler):
     redis = None
     dispatcher = None
     http_method_names = ['get',]
+    def __init__(self, protocol, request, response, payload):
+        super().__init__(protocol, request, payload)
+        self.response = response
 
     @asyncio.coroutine
     def handle_request(self):
@@ -60,8 +63,7 @@ class Stream(sse.Handler):
         loop.call_later(2000, _heartbeat)
 
     def prepare_response(self):
-        # SSE author is definitely fucking mongoloid
-        response = sse.Response(self.transport, 200)
+        response = self.response
         response.add_header('Content-Type', 'text/event-stream')
         response.add_header('Cache-Control', 'no-cache')
         response.add_header('Connection', 'keep-alive')
@@ -70,15 +72,10 @@ class Stream(sse.Handler):
         response.add_header("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept")
         response.add_header("Access-Control-Max-Age", "1728000")
         response.send_headers()
-        self.response = response
 
     def send(self, *args, **kwargs):
         logger.info('[%s]Sending %s / %s', self.me, args, kwargs)
-        try:
-            return super().send(*args, **kwargs)
-        except AssertionError:
-            # SSE author is definitely fucking mongoloid
-            pass
+        return super().send(*args, **kwargs)
 
     @asyncio.coroutine
     def get_connection(self):
@@ -112,12 +109,13 @@ class AppProtocol(sse.protocol.SseServerProtocol):
 
     @asyncio.coroutine
     def handle_request(self, request, payload):
-        handler = self.handler_class(self, request, payload)
+        response = sse.Response(self.writer, 200)
+        handler = self.handler_class(self, request, response, payload)
         self.handler = handler
         try:
             handler.validate_sse()
         except sse.exceptions.SseException as e:
-            response = sse.Response(self.transport, e.status)
+            response.stats = e.status
             if e.headers:
                 for header in e.headers:
                     response.add_header(*header)
