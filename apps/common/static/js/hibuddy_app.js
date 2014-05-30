@@ -8,8 +8,31 @@ function HiBuddyApp(room) {
 
 var peer_config = {};
 
+
+function parse_sheet(uri) {
+    var parts = uri.split(':');
+    var turn = parts[0];
+    var ip_parts = parts[1].split('@');
+    var username = ip_parts[0];
+    var host = ip_parts[1];
+    var tail = parts[2];
+    return {username: username, url: turn + ':' + host + ':' + tail };
+}
+
+
 window.turnserversDotComAPI.iceServers(function(data) {
-    peer_config = data;
+    compat = parse_sheet(data[1].url);
+//    stun + turn over udp
+    peer_config = {
+                iceServers: [
+                    data[0],
+                    {
+                        credential: data[1].credential,
+                        url: compat.url,
+                        username: compat.username
+                    }
+                ]
+            };
 });
 
 HiBuddyApp.prototype = {
