@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% block extra_head %}
+<link rel="stylesheet" href="{% static "css/slider.css" %}">
 <link rel="stylesheet" href="{% static "css/room_detail.css" %}">
 {% endblock extra_head %}
 {% block title %}
@@ -14,7 +15,7 @@
     <div class="input-group">
       <input name="copy_link" type="text" disabled value="{{ request.build_absolute_uri }}" class="form-control">
       <span class="input-group-btn">
-        <button class="btn btn-default" type="button" >
+        <button type="button" class="btn btn-default" type="button" >
           <span class="glyphicon glyphicon-link"></span>
         </button>
       </span>
@@ -24,14 +25,14 @@
     <div class="row">
       <div class="col-md-3 col-md-offset-6">
         <a href="#">
-        <button class="btn btn-default btn-sm">
+        <button type="button" class="btn btn-default btn-sm">
         <span class="glyphicon glyphicon-plus"></span>
         </button>
         </a>
       </div>
       <div class="col-md-2 col-md-offset-1">
         <a href="">
-        <button class="btn btn-default btn-sm">
+        <button type="button" class="btn btn-default btn-sm">
         <span class="glyphicon glyphicon-trash">
         </span>
         </button>
@@ -42,18 +43,31 @@
 </div>
 <div class="row" id="videos">
   <div class="row" id="my_stream">
-    <div class="col-md-6">
+    <div class="col-md-12">
       <div class="row">
-        <div class="col-md-3">
-          <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-user"></span></button>
+        <div class="col-md-1">
+          <button type="button" class="btn btn-default btn-tt"><span class="glyphicon glyphicon-user"></span></button>
         </div>
-        <div class="col-md-9 audio_output">
-          <audio id="local-audio" muted controls></audio>
+          <audio id="local-audio" hidden></audio>
+        <div class="col-md-2 col-md-offset-1">
+          <button type="button" class="btn btn-default btn-tt">
+            <span class="glyphicon glyphicon-volume-down"></span>
+          </button>
+        </div>
+        <div class="col-md-4">
+          <input id="volume_range" type="range" step="0.01" min="0" max="1" value="1"/>
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-default btn-tt">
+            <span class="glyphicon glyphicon-volume-up"></span>
+          </button>
+        </div>
+        <div class="col-md-1 col-md-offset-1">
+          <button type="button" class="btn btn-default btn-tt" id="playpause" onclick="togglePlayPause(this)">
+            <span class="glyphicon glyphicon glyphicon-off"></span>
+          </button>
         </div>
       </div>
-    </div>
-    <div class="col-md-6">
-      <button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-eye-close"></span></button>
     </div>
   </div>
 </div>
@@ -64,4 +78,6 @@
 <script type="text/javascript" src="{% static "js/microevent.js" %}" ></script>
 <script type="text/javascript" src="{% static "js/hibuddy_app.js" %}" ></script>
 <script type="text/javascript" src="{% static "js/app.js" %}" ></script>
+<script type="text/javascript" src="{% static "js/bootstrap-slider.js" %} "></script>
+<script type="text/javascript" src="{% static "js/room_detail.js" %} "></script>
 {% endblock js %}
