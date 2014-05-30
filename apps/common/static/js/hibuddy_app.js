@@ -1,7 +1,22 @@
 /* globals EventSource, MicroEvent,
    RTCPeerConnection, RTCSessionDescription, RTCIceCandidate */
-//todo rename
-function HiBuddyApp(room) {
+(function(window, navigator) {
+  navigator.getUserMedia = (navigator.getUserMedia       ||
+                            navigator.mozGetUserMedia    ||
+                            navigator.webkitGetUserMedia);
+  window.RTCSessionDescription = (window.RTCSessionDescription    ||
+                                  window.mozRTCSessionDescription ||
+                                  window.webkitRTCSessionDescription);
+  window.RTCIceCandidate = (window.RTCIceCandidate    ||
+                            window.mozRTCIceCandidate ||
+                            window.webkitRTCIceCandidate);
+  window.RTCPeerConnection =  (window.RTCPeerConnection    ||
+                               window.mozRTCPeerConnection ||
+                               window.webkitRTCPeerConnection);
+}(window, navigator));
+
+
+function VoiceApp(room) {
     this.room = room;
     this.me = undefined;
 }
@@ -35,7 +50,7 @@ window.turnserversDotComAPI.iceServers(function(data) {
             };
 });
 
-HiBuddyApp.prototype = {
+VoiceApp.prototype = {
     start: function(stream, callback) {
         this.stream = stream;
         this.onRemoteStream = callback;
@@ -126,10 +141,6 @@ HiBuddyApp.prototype = {
 
     _get_or_create_peer: function(message){
         var from = message.from;
-        if (from === undefined){
-            console.error('Fuck IT');
-            return undefined;
-        }
         var peerConnection = this.peers[from];
         if (peerConnection === undefined){
             var _peerConnection = new RTCPeerConnection(peer_config);
@@ -152,7 +163,6 @@ HiBuddyApp.prototype = {
 
         if (peerConnection.iceConnectionState === "disconnected") {
             this.trigger("disconnected");
-//            todo: remove video with peerConnection.from id
         }
 
         if (peerConnection.iceConnectionState === "connected"){
@@ -163,7 +173,6 @@ HiBuddyApp.prototype = {
                 answer: 'answer'
                 });
         }
-
     },
 
     _onNewIceCandidate: function(event) {
@@ -191,21 +200,15 @@ HiBuddyApp.prototype = {
             this.onRemoteStream(event.stream, pc.from);
         };
 
-//        _onRemoveStream = function(){
-//          console.log('removed');
-//        };
-
         pc.onaddstream = _onAddStream.bind(this);
         pc.oniceconnectionstatechange = closure.bind(this);
         pc.onicecandidate = this._onNewIceCandidate.bind(this);
-//        pc.onremovestream = _onRemoveStream.bind(this);
         pc.addStream(this.stream);
         return pc;
     },
 
     _sendOffer: function(peerConnection, to) {
         // Create offer
-
         peerConnection.createOffer(function(offer) {
             peerConnection.setLocalDescription(offer, function() {
                 // Send offer
@@ -243,5 +246,5 @@ HiBuddyApp.prototype = {
 
 };
 
-MicroEvent.mixin(HiBuddyApp);
-HiBuddyApp.prototype.on = HiBuddyApp.prototype.bind;
+MicroEvent.mixin(VoiceApp);
+VoiceApp.prototype.on = VoiceApp.prototype.bind;
