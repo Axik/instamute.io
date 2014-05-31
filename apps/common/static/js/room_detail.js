@@ -19,22 +19,30 @@ function setVolume(volume_node, value) {
     audio.volume = value;
 }
 
-function copy(str) {
-    //for IE ONLY!
-    window.clipboardData.setData('Text', str);
-}
 
-$(document).ready(function() {
-    $("input[type=range]").slider({
-        min: 0,
-        max: 1,
-        step: 0.01,
-        value: 1,
-        tooltip: "hide",
-    });
+function bind_slider(){
+
+    $("input[type=range]").each(function(){
+        if (this.ranged === true){
+            return;
+        }
+        $(this).slider({
+                min: 0,
+                max: 1,
+                step: 0.01,
+                value: 0.5,
+                tooltip: "hide",
+            });
+        this.ranged = true;
+    })
+
     $("input[type=range]").on("slide", function(slideEvent) {
         setVolume(this, slideEvent.value);
     });
+}
+
+$(document).ready(function() {
+    bind_slider();
     $('#copy_link_button').zclip({
         path: this.data_link,
         copy: function() {

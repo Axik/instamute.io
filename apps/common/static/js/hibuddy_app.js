@@ -131,7 +131,6 @@ VoiceApp.prototype = {
 
     _onIceCandidate: function(event) {
         var message = JSON.parse(event.data);
-        console.log('_onIceCandidate:' + message.from);
         var candidate = new RTCIceCandidate(message.candidate);
         var peerConnection = this._get_or_create_peer(message);
 

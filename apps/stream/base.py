@@ -135,5 +135,5 @@ class AppProtocol(sse.protocol.SseServerProtocol):
 
     def connection_lost(self, exc):
         super().connection_lost(exc)
-        self.handler.connection_lost(exc)
+        self.handler and self.handler.connection_lost(exc)
         self.handler = None

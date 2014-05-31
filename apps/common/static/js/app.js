@@ -55,6 +55,9 @@
             audio_input.src = URL.createObjectURL(remoteStream);
             audio_input.removeAttribute("muted");
             audio_input.play();
+            var username = stream_clone.querySelector('#username');
+            username.innerHTML = from;
+            bind_slider();
         });
 
     }, function(err) {
