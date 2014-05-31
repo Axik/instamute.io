@@ -1,7 +1,7 @@
 PROJECT_NAME = "lol_voice"
 DB_NAME = "lol_voice"
 
-APPS = "common" "profiles"
+APPS = "common" "rooms"
 
 default: _requirements _settings db test end
 

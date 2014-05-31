@@ -14,3 +14,4 @@ asyncio-sse
 asyncio_redis
 django-rq==0.6.0
 django-redis-cache==0.10.0
+selenium
