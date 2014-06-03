@@ -10,7 +10,7 @@ django-extensions==1.3.6
 short-url==1.2.1
 django-model-utils==2.0.3
 dj-database-url==0.3.0
-asyncio-sse
+git+https://github.com/brutasse/asyncio-sse.git
 asyncio_redis
 django-rq==0.6.0
 django-redis-cache==0.10.0
