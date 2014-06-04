@@ -1,15 +1,18 @@
 import json
+import redis
+
+from django.conf import settings
 from django.views.generic import CreateView, DetailView, View
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-import django_rq
-
-redis_client = django_rq.get_connection()
 
 from skd_tools.mixins import ActiveTabMixin
 import short_url
 
 from .models import Room
+
+
+redis_client = redis.StrictRedis(**settings.REDIS)
 
 
 class RoomCreateView(ActiveTabMixin, CreateView):
