@@ -127,4 +127,4 @@ except ImportError:
     pass
 
 STREAM_SCALE = 1
-MAX_MEMBERS = 7
+MAX_MEMBERS = 5
