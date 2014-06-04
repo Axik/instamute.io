@@ -2,7 +2,7 @@ import re
 import uuid
 import json
 import asyncio
-import logging.config
+import logging
 from .base import Stream
 from .exceptions import NotFound
 from django.contrib.webdesign import lorem_ipsum
