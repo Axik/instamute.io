@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class SignalHandler(Stream):
     me = None
     room = None
-    channel = None # message chanel
+    channel = None  # message chanel
 
     def get_param(self):
         param = re.match('/rooms/([\w\d]+)/signalling', self.request.path)
@@ -30,10 +30,10 @@ class SignalHandler(Stream):
         # uid = uuid.uuid4().hex
         uid = lorem_ipsum.words(1, False).upper()
         self.me = uid
-        yield from self.validate_client()
         data = dict(type='uid', uid=uid)
         data['from'] = uid
         self.send(data, event='uid')
+        yield from self.validate_client()
 
         yield from self.publish(self.room, json.dumps((data, 'newbuddy')))
 
@@ -73,6 +73,8 @@ class SignalHandler(Stream):
         connection = yield from self.get_connection()
         members = yield from connection.scard("members{}".format(self.room))
         if members > settings.MAX_MEMBERS:
+            logger.warn('Room [%s] is already full', self.room)
             self.send({"message": "Room is full"}, event='rejected')
             raise HttpErrorException(409, message='Rejected')
-        yield from connection.sadd("members{}".format(self.room), self.me)
+        yield from connection.sadd("members{}".format(self.room), [self.me])
+        logger.info('Client [%s] was validated', self.me)

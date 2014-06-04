@@ -64,12 +64,19 @@ VoiceApp.prototype = {
         this.source.on("icecandidate", this._onIceCandidate.bind(this));
         this.source.on("invite", this._onInvite.bind(this));
         this.source.on("dropped", this._onDropped.bind(this));
+        this.source.on("rejected", this._onRejected.bind(this));
     },
 
     _onUID: function(event) {
         var message = JSON.parse(event.data);
         this.me = message.uid;
         console.log('UID: ' + this.me);
+    },
+
+    _onRejected: function(event) {
+        var message = JSON.parse(event.data);
+        console.log('Rejected: ' + message.message);
+        this.source.close();
     },
 
     _onInvite: function(event) {
