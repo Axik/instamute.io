@@ -20,19 +20,19 @@ function setVolume(volume_node, value) {
 }
 
 
-function bind_slider(){
+function bind_slider() {
 
-    $("input[type=range]").each(function(){
-        if (this.ranged === true){
+    $("input[type=range]").each(function() {
+        if (this.ranged === true) {
             return;
         }
         $(this).slider({
-                min: 0,
-                max: 1,
-                step: 0.01,
-                value: 0.5,
-                tooltip: "hide",
-            });
+            min: 0,
+            max: 1,
+            step: 0.01,
+            value: 0.5,
+            tooltip: "hide",
+        });
         this.ranged = true;
     })
 

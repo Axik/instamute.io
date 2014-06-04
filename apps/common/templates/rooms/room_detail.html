@@ -79,6 +79,27 @@
     </div>
   </div>
 </div>
+<!-- /.modal-start -->
+<div class="modal fade" id="max_size_modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">{% trans "Hello, summoner, we have problem there" %}</h4>
+      </div>
+      <div class="modal-body">
+        <p>{% trans "The limit of members for this room was exceeded, and we can not connect you with your buddies (Sorry for that)." %}
+        {% trans "You can easily" %} <a href="{% url 'rooms:create' %}">{% trans "create a new one" %}</a>
+        {% trans "or you can wait till somebody will leave this room and try to connect one more time, good luck!" %}
+        </p>
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'rooms:create' %}"><button type="button" class="btn btn-primary">{% trans "Create a new room without anybody" %}</button></a>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 {% endblock content %}
 {% block js %}
 {{ block.super }}

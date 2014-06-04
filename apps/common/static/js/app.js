@@ -22,6 +22,14 @@
         document.getElementById(from).remove();
     });
 
+    voice_app.on("rejected", function() {
+        $("#max_size_modal").modal()
+    });
+
+    $('#max_size_modal').on('hidden.bs.modal', function(e) {
+        console.log('hui')
+    })
+
 
     navigator.getUserMedia({
         video: false,
