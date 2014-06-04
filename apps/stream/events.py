@@ -33,7 +33,7 @@ class SignalHandler(Stream):
         yield from self.validate_client()
         data = dict(type='uid', uid=uid)
         data['from'] = uid
-        self.send(data, event='uid' )
+        self.send(data, event='uid')
 
         yield from self.publish(self.room, json.dumps((data, 'newbuddy')))
 

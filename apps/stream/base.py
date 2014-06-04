@@ -12,10 +12,7 @@ logger = logging.getLogger(__name__)
 class Stream(sse.Handler):
     redis = None
     dispatcher = None
-    http_method_names = ['get',]
-    def __init__(self, protocol, request, response, payload):
-        super().__init__(protocol, request, payload)
-        self.response = response
+    http_method_names = ['get', ]
 
     @asyncio.coroutine
     def handle_request(self):
@@ -31,11 +28,7 @@ class Stream(sse.Handler):
     @asyncio.coroutine
     def http_method_not_allowed(self):
         logger.warning('Method Not Allowed (%s): %s', self.request.method, self.request.path,
-            extra={
-                'status_code': 405,
-                'request': self.request
-            }
-        )
+                       extra={'status_code': 405, 'request': self.request})
         raise MethodNotAllowed(self.http_method_names)
 
     def validate_sse(self):
@@ -53,6 +46,7 @@ class Stream(sse.Handler):
     def schedule_heartbeat(self):
         # Need be carefully with CPython garbage collection
         wself = weakref.ref(self)
+
         def _heartbeat():
             handler = wself()
             if not handler:
@@ -69,7 +63,8 @@ class Stream(sse.Handler):
         response.add_header('Connection', 'keep-alive')
         response.add_header("Access-Control-Allow-Origin", "*")
         response.add_header("Access-Control-Allow-Methods", "POST, GET")
-        response.add_header("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept")
+        response.add_header("Access-Control-Allow-Headers",
+                            "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept")
         response.add_header("Access-Control-Max-Age", "1728000")
         response.send_headers()
 
@@ -115,7 +110,7 @@ class AppProtocol(sse.protocol.SseServerProtocol):
         try:
             handler.validate_sse()
         except sse.exceptions.SseException as e:
-            response.stats = e.status
+            response.status = e.status
             if e.headers:
                 for header in e.headers:
                     response.add_header(*header)

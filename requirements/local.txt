@@ -4,4 +4,3 @@ coverage
 Fabric
 django-debug-toolbar
 bpython
-Sphinx
