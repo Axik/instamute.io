@@ -5,7 +5,9 @@ import asyncio
 import logging.config
 from .base import Stream
 from .exceptions import NotFound
+from aiohttp.errors import HttpErrorException
 from django.contrib.webdesign import lorem_ipsum
+from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
@@ -28,6 +30,7 @@ class SignalHandler(Stream):
         # uid = uuid.uuid4().hex
         uid = lorem_ipsum.words(1, False).upper()
         self.me = uid
+        yield from self.validate_client()
         data = dict(type='uid', uid=uid)
         data['from'] = uid
         self.send(data, event='uid' )
@@ -61,4 +64,15 @@ class SignalHandler(Stream):
         def drop():
             yield from self.channel.close()
             yield from self.publish(self.room, json.dumps((data, 'dropped')))
+            connection = yield from self.get_connection()
+            yield from connection.srem("members{}".format(self.room), [self.me])
         asyncio.async(drop())
+
+    @asyncio.coroutine
+    def validate_client(self):
+        connection = yield from self.get_connection()
+        members = yield from connection.scard("members{}".format(self.room))
+        if members > settings.MAX_MEMBERS:
+            self.send({"message": "Room is full"}, event='rejected')
+            raise HttpErrorException(409, message='Rejected')
+        yield from connection.sadd("members{}".format(self.room), self.me)
