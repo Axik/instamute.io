@@ -6,7 +6,7 @@ import logging
 from django.conf import settings
 
 
-from . import LiveSSEServer
+from .utils import LiveSSEServer
 
 
 redis_client = redis.StrictRedis(**settings.REDIS)
