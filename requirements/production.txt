@@ -15,3 +15,4 @@ asyncio_redis
 redis
 django-bootstrap-form
 django-skd-tools
+requests
