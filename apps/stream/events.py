@@ -5,7 +5,9 @@ import asyncio
 import logging.config
 from .base import Stream
 from .exceptions import NotFound
+from aiohttp.errors import HttpErrorException
 from django.contrib.webdesign import lorem_ipsum
+from django.conf import settings
 
 
 logger = logging.getLogger(__name__)
@@ -14,7 +16,7 @@ logger = logging.getLogger(__name__)
 class SignalHandler(Stream):
     me = None
     room = None
-    channel = None # message chanel
+    channel = None  # message chanel
 
     def get_param(self):
         param = re.match('/rooms/([\w\d]+)/signalling', self.request.path)
@@ -31,6 +33,7 @@ class SignalHandler(Stream):
         data = dict(type='uid', uid=uid)
         data['from'] = uid
         self.send(data, event='uid')
+        yield from self.validate_client()
 
         yield from self.publish(self.room, json.dumps((data, 'newbuddy')))
 
@@ -61,4 +64,17 @@ class SignalHandler(Stream):
         def drop():
             yield from self.channel.close()
             yield from self.publish(self.room, json.dumps((data, 'dropped')))
+            connection = yield from self.get_connection()
+            yield from connection.srem("members{}".format(self.room), [self.me])
         asyncio.async(drop())
+
+    @asyncio.coroutine
+    def validate_client(self):
+        connection = yield from self.get_connection()
+        members = yield from connection.scard("members{}".format(self.room))
+        if members > settings.MAX_MEMBERS:
+            logger.warn('Room [%s] is already full', self.room)
+            self.send({"message": "Room is full"}, event='rejected')
+            raise HttpErrorException(409, message='Rejected')
+        yield from connection.sadd("members{}".format(self.room), [self.me])
+        logger.info('Client [%s] was validated', self.me)
