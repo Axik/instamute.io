@@ -64,7 +64,7 @@ class LiveSSEServer(TestCase):
         return self.parse_name(event_name), self.parse_data(event_data)
 
     def read_event(self, response):
-        with UnixSignalDeathPenalty(1):
+        with UnixSignalPenalty(1):
             return self._read_event(response)
 
     def parse_name(self, raw):
@@ -76,7 +76,7 @@ class LiveSSEServer(TestCase):
         return data
 
 
-class UnixSignalDeathPenalty(object):
+class UnixSignalPenalty(object):
 
     def handle_penalty(self, signum, frame):
         raise TimeoutError('Timeout')
@@ -103,3 +103,20 @@ class UnixSignalDeathPenalty(object):
     def cancel(self):
         signal.alarm(0)
         signal.signal(signal.SIGALRM, signal.SIG_DFL)
+
+
+def test_coroutine(function):
+    """
+    Decorator for methods (which are coroutines) in TestCase
+
+    Wraps the coroutine inside `run_until_complete`.
+    """
+    function = asyncio.coroutine(function)
+
+    def wrapper(self):
+        @asyncio.coroutine
+        def c():
+            yield from function(self)
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(c())
+    return wrapper

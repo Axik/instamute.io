@@ -62,6 +62,12 @@ class EventBehaviorTest(LiveSSEServer):
         me = data['uid']
         # first stream connected
 
+        second_stream = requests.get(self.room_link, stream=True)
+        self.assertEqual(second_stream.status_code, 200)
+        # second stream connected
+
+        new_buddy, data = self.read_event(first_stream)
+
         # publish message
         redis_client.publish(self.current_room, json.dumps([{'to': me, }, 'any_event']))
         name, data = self.read_event(first_stream)
@@ -128,6 +134,8 @@ class EventBehaviorTest(LiveSSEServer):
         self.assertEqual(name, 'uid')
         # second stream connected
 
+        # first_stream new buddy
+        _, __ = self.read_event(first_stream)
         first_stream = None
 
         name, data = self.read_event(second_stream)
