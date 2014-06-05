@@ -1,11 +1,21 @@
 {% load i18n %}
 <ul class="nav masthead-nav">
     <li {% if active_tab == 'home' %}
-    class="active"{% endif %}>
-        <a href="{% url "rooms:create" %}">{% trans "Home" %}</a>
+        class="active"{% endif %}>
+        <a href="{% url "rooms:create" %}">
+            {% trans "Home" %}
+        </a>
     </li>
-    <li><a href="#">{% trans "About" %}</a></li>
+    <li {% if active_tab == 'about' %}
+        class="active"{% endif %}>
+        <a href="{% url 'about' %}">
+            {% trans "About" %}
+        </a>
+    </li>
     <li {% if active_tab == 'contact' %}
-    class="active"{% endif %}
-    ><a href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
+        class="active"{% endif %}>
+        <a href="{% url 'contact' %}">
+            {% trans "Contact" %}
+        </a>
+    </li>
 </ul>

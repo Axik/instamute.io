@@ -1,6 +1,6 @@
 import logging
 
-from django.views.generic import RedirectView, FormView
+from django.views.generic import RedirectView, FormView, TemplateView
 from django.core.urlresolvers import reverse_lazy
 from django.conf import settings
 from django.contrib import messages
@@ -40,5 +40,11 @@ class ContactView(ActiveTabMixin, FormView):
         return super().form_valid(form)
 
 
+class AboutView(ActiveTabMixin, TemplateView):
+    template_name = 'about.html'
+    active_tab = 'about'
+
+
 main = MainView.as_view()
 contact = ContactView.as_view()
+about = AboutView.as_view()

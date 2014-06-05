@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "None and Void: About" %}
+{% endblock title %}
+{% block extra_head %}
+    <style type="text/css">
+    h2.cover-heading {
+        margin-top: 10%;
+    }
+    </style>
+{% endblock extra_head %}
+{% block content %}
+<div class="inner cover">
+    <h1 class="cover-heading">{% trans "None and Void" %}</h1>
+    <h2 class="cover-heading">{% trans "Just voice web chat" %} </h2>
+    <h2 class="cover-heading">{% trans "Anonymous. No payments. No plugins. No software. "%} </h2>
+    <h2 class="cover-heading"><strong> {% trans "Nothing, except voice chat" %}</strong></h2>
+</div>
+{% endblock content %}
