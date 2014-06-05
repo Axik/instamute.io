@@ -22,6 +22,9 @@
         document.getElementById(from).remove();
     });
 
+    voice_app.on("rejected", function() {
+        $("#max_size_modal").modal()
+    });
 
     navigator.getUserMedia({
         video: false,
