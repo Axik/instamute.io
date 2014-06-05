@@ -1,17 +1,35 @@
-import os
-import uuid
 import json
-import time
-import sys
-import subprocess
 import logging
-from django.conf import settings
 import signal
+import asyncio
+import threading
 from django.test import TestCase
 from http.client import IncompleteRead
+from ..management.commands.stream import init_app
 
 
 logger = logging.getLogger(__name__)
+
+
+class SSEThreadedServer(threading.Thread):
+
+    @classmethod
+    def create(cls, host, port, is_ready):
+        thread = cls(daemon=True)
+        cls.host = host
+        cls.port = port
+        cls.is_ready = is_ready
+        thread.start()
+        return thread
+
+    def run(self):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.set_debug(True)
+        self.loop = loop
+        init_app(self.host, self.port)
+        self.is_ready.set()
+        loop.run_forever()
 
 
 class LiveSSEServer(TestCase):
@@ -21,24 +39,20 @@ class LiveSSEServer(TestCase):
     def live_server_url(self):
         return 'http://%s:%s' % ('0.0.0.0', self.PORT)
 
-    # @classmethod
-    # def setUpClass(cls):
-    #     env = os.environ.copy()
-    #     env['PORT'] = str(cls.PORT)
-    #     cls.server = subprocess.Popen([sys.executable, 'manage.py', 'stream'],
-    #                                   close_fds=True,
-    #                                   cwd=settings.PROJECT_DIR,
-    #                                   env=env)
-    #     cls.server.poll()
-    #     time.sleep(1)
-    #     super(LiveSSEServer, cls).setUpClass()
-    #
-    # @classmethod
-    # def tearDownClass(cls):
-    #     time.sleep(1)
-    #     cls.server.kill()
-    #     logger.debug('LiveSSEServer stopped')
-    #     super(LiveSSEServer, cls).tearDownClass()
+    @classmethod
+    def setUpClass(cls):
+        is_ready = threading.Event()
+        cls.server = SSEThreadedServer.create('0.0.0.0', cls.PORT, is_ready=is_ready)
+        is_ready.wait()
+        super(LiveSSEServer, cls).setUpClass()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.server.join(0.1)
+        try:
+            cls.server.loop.close()
+        except Exception as e:
+            logger.exception()
 
     def _read_event(self, response):
         try:

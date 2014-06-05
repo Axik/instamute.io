@@ -62,7 +62,8 @@ class SignalHandler(Stream):
 
         @asyncio.coroutine
         def drop():
-            yield from self.channel.close()
+            if self.channel:
+                yield from self.channel.close()
             yield from self.publish(self.room, json.dumps((data, 'dropped')))
             connection = yield from self.get_connection()
             yield from connection.srem("members{}".format(self.room), [self.me])

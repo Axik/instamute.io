@@ -1,7 +1,7 @@
 PROJECT_NAME = "lol_voice"
 DB_NAME = "lol_voice"
 
-APPS = "common" "profiles"
+APPS = "common" "profiles" "stream"
 
 default: _requirements _settings db test end
 
@@ -64,6 +64,7 @@ end:
 clean:
 	@echo "Cleaning *.pyc files"
 	@find . -name "*.pyc" -exec rm -f {} \;
+	@find . -name "__pycache__" -exec rm -rf {} \;
 
 collect_static:
 	python manage.py collectstatic -l --noinput
