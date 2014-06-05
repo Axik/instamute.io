@@ -12,6 +12,7 @@ django-model-utils==2.0.3
 dj-database-url==0.3.0
 git+https://github.com/brutasse/asyncio-sse.git
 asyncio_redis
+selenium
 redis
 django-bootstrap-form
 django-skd-tools

@@ -1,7 +1,7 @@
 PROJECT_NAME = "lol_voice"
 DB_NAME = "lol_voice"
 
-APPS = "common" "profiles" "stream"
+APPS = "common" "profiles" "stream" "rooms"
 
 default: _requirements _settings db test end
 
@@ -80,6 +80,3 @@ heroku_db:
 	heroku run "python manage.py syncdb --noinput" -a lol-voice-alpha
 	heroku run "python manage.py migrate" -a lol-voice-alpha
 	heroku run "python manage.py filldb" -a lol-voice-alpha
-
-worker:
-	@python manage.py rqworker high default low

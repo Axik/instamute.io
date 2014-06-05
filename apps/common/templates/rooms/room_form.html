@@ -22,7 +22,7 @@
     <h1 class="cover-heading"></h1>
     <form action="{% url 'rooms:create' %}" method="post">{% csrf_token %}
         <p class="lead">
-        <button class="btn btn-lg btn-default" type="submit">{% trans "Create Room" %}</button>
+        <button class="btn btn-lg btn-default" name="submit" type="submit">{% trans "Create Room" %}</button>
         </p>
     </form>
 </div>
