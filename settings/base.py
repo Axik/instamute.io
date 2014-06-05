@@ -26,10 +26,18 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Sanyer Myasoedov', 'msoedov@gmail.com'),
+    ('Kyrylo Perevozchykov', 'paravozchikov@gmail.com'),
 )
 
-MANAGERS = ADMINS
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'none.and.void@gmail.com'
+EMAIL_HOST_PASSWORD = 'noneandvoidemail'
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_FROM_ADDRESS = 'none.and.void@gmail.com'
+EMAIL_FAIL_SILENTLY = True
 
 CACHES = {
     'default': {
@@ -40,7 +48,7 @@ CACHES = {
 
 ALLOWED_HOSTS = ['*']
 
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/Amsterdam'
 
 LANGUAGE_CODE = 'en-us'
 
@@ -119,3 +127,4 @@ except ImportError:
     pass
 
 STREAM_SCALE = 1
+MAX_MEMBERS = 5

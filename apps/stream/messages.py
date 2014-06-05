@@ -16,7 +16,7 @@ class MessageDispatcher(object):
 
     def __init__(self, subscription, loop=None):
         self.subscription = subscription
-        self.queues = defaultdict(list) # chanel name -> list of Q
+        self.queues = defaultdict(list)  # chanel name -> list of Q
         self.loop = loop or asyncio.get_event_loop()
 
     @staticmethod
@@ -26,7 +26,7 @@ class MessageDispatcher(object):
         Initialize message dispatcher
         """
         subscriber = yield from connection.start_subscribe()
-        dispatcher =  MessageDispatcher(subscriber, loop)
+        dispatcher = MessageDispatcher(subscriber, loop)
         asyncio.async(dispatcher.dispatch())
         return dispatcher
 

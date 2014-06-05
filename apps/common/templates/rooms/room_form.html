@@ -3,12 +3,26 @@
 {% block title %}
 {% trans "Room create" %}
 {% endblock title %}
+{% block extra_head %}
+    <style type="text/css">
+    .about{
+        margin-bottom: 20%;
+    }
+    </style>
+{% endblock extra_head %}
 {% block content %}
 <div class="inner cover">
-    <h1 class="cover-heading">{% trans "Create Room" %}</h1>
+    <div class="about">
+        <h3 class="cover-heading">{% trans "Just voice web chat" %} </h3>
+        <h3 class="cover-heading">{% trans "Anonymous. No payments. No plugins. No software. "%} </h3>
+        <h1 class="cover-heading"><strong> {% trans "Nothing, except the voice chat." %}</strong></h1>
+    </div>
+    <p class="lead">{% trans "Just go, and " %}</p>
+
+    <h1 class="cover-heading"></h1>
     <form action="{% url 'rooms:create' %}" method="post">{% csrf_token %}
         <p class="lead">
-        <input class="btn btn-lg btn-default" name="submit" type="submit" value="Submit" />
+        <button class="btn btn-lg btn-default" name="submit" type="submit">{% trans "Create Room" %}</button>
         </p>
     </form>
 </div>

@@ -1,18 +1,18 @@
 /* globals EventSource, MicroEvent,
    RTCPeerConnection, RTCSessionDescription, RTCIceCandidate */
 (function(window, navigator) {
-  navigator.getUserMedia = (navigator.getUserMedia       ||
-                            navigator.mozGetUserMedia    ||
-                            navigator.webkitGetUserMedia);
-  window.RTCSessionDescription = (window.RTCSessionDescription    ||
-                                  window.mozRTCSessionDescription ||
-                                  window.webkitRTCSessionDescription);
-  window.RTCIceCandidate = (window.RTCIceCandidate    ||
-                            window.mozRTCIceCandidate ||
-                            window.webkitRTCIceCandidate);
-  window.RTCPeerConnection =  (window.RTCPeerConnection    ||
-                               window.mozRTCPeerConnection ||
-                               window.webkitRTCPeerConnection);
+    navigator.getUserMedia = (navigator.getUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.webkitGetUserMedia);
+    window.RTCSessionDescription = (window.RTCSessionDescription ||
+        window.mozRTCSessionDescription ||
+        window.webkitRTCSessionDescription);
+    window.RTCIceCandidate = (window.RTCIceCandidate ||
+        window.mozRTCIceCandidate ||
+        window.webkitRTCIceCandidate);
+    window.RTCPeerConnection = (window.RTCPeerConnection ||
+        window.mozRTCPeerConnection ||
+        window.webkitRTCPeerConnection);
 }(window, navigator));
 
 
@@ -31,23 +31,25 @@ function parse_sheet(uri) {
     var username = ip_parts[0];
     var host = ip_parts[1];
     var tail = parts[2];
-    return {username: username, url: turn + ':' + host + ':' + tail };
+    return {
+        username: username,
+        url: turn + ':' + host + ':' + tail
+    };
 }
 
 
 window.turnserversDotComAPI.iceServers(function(data) {
     compat = parse_sheet(data[1].url);
-//    stun + turn over udp
+    //    stun + turn over udp
     peer_config = {
-                iceServers: [
-                    data[0],
-                    {
-                        credential: data[1].credential,
-                        url: compat.url,
-                        username: compat.username
-                    }
-                ]
-            };
+        iceServers: [
+            data[0], {
+                credential: data[1].credential,
+                url: compat.url,
+                username: compat.username
+            }
+        ]
+    };
 });
 
 VoiceApp.prototype = {
@@ -64,12 +66,20 @@ VoiceApp.prototype = {
         this.source.on("icecandidate", this._onIceCandidate.bind(this));
         this.source.on("invite", this._onInvite.bind(this));
         this.source.on("dropped", this._onDropped.bind(this));
+        this.source.on("rejected", this._onRejected.bind(this));
     },
 
     _onUID: function(event) {
         var message = JSON.parse(event.data);
         this.me = message.uid;
         console.log('UID: ' + this.me);
+    },
+
+    _onRejected: function(event) {
+        var message = JSON.parse(event.data);
+        console.log('Rejected: ' + message.message);
+        this.source.close();
+        this.trigger("rejected", message.message)
     },
 
     _onInvite: function(event) {
@@ -85,6 +95,7 @@ VoiceApp.prototype = {
         this.trigger("dropped", from);
     },
 
+
     _onNewBuddy: function(event) {
 
         var peerConnection = new RTCPeerConnection(peer_config);
@@ -94,11 +105,11 @@ VoiceApp.prototype = {
         console.log("New user" + message.uid);
         this.peers[message.uid] = peerConnection;
         this._post({
-                type: 'invite',
-                from: this.me,
-                to: message.uid,
-                invite: 'invite'
-            });
+            type: 'invite',
+            from: this.me,
+            to: message.uid,
+            invite: 'invite'
+        });
         this._sendOffer(peerConnection, message.uid);
         this.trigger("newbuddy");
     },
@@ -123,7 +134,9 @@ VoiceApp.prototype = {
         var answer = new RTCSessionDescription(message.answer);
         var peerConnection = this.peers[message.from];
         console.log('_onAnswer:' + message.from);
-        if (peerConnection === undefined) {return;}
+        if (peerConnection === undefined) {
+            return;
+        }
         peerConnection.setRemoteDescription(answer, function() {
             console.log("done");
         }.bind(this));
@@ -138,10 +151,10 @@ VoiceApp.prototype = {
         peerConnection.addIceCandidate(candidate);
     },
 
-    _get_or_create_peer: function(message){
+    _get_or_create_peer: function(message) {
         var from = message.from;
         var peerConnection = this.peers[from];
-        if (peerConnection === undefined){
+        if (peerConnection === undefined) {
             var _peerConnection = new RTCPeerConnection(peer_config);
             _peerConnection.from = from;
             peerConnection = this._setupPeerConnection(_peerConnection);
@@ -164,13 +177,13 @@ VoiceApp.prototype = {
             this.trigger("disconnected");
         }
 
-        if (peerConnection.iceConnectionState === "connected"){
+        if (peerConnection.iceConnectionState === "connected") {
             this.trigger("connected");
             this._post({
-                    type: 'connected',
-                    from: this.me,
+                type: 'connected',
+                from: this.me,
                 answer: 'answer'
-                });
+            });
         }
     },
 
@@ -191,7 +204,7 @@ VoiceApp.prototype = {
     },
 
     _setupPeerConnection: function(pc) {
-        var closure = function(){
+        var closure = function() {
             this._onIceStateChange(pc);
         };
 

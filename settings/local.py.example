@@ -43,50 +43,11 @@ TEST_RUNNER = 'django_coverage.coverage_runner.CoverageRunner'
 COVERAGE_MODULE_EXCLUDES = ['tests$', 'settings$', 'urls$', 'locale$', 'filldb',
                             '__init__', 'django', 'migrations']
 
-# facebook.com
-FACEBOOK_APP_ID = ''
-FACEBOOK_API_SECRET = ''
 
-# twitter.com
-TWITTER_CONSUMER_KEY = ''
-TWITTER_CONSUMER_SECRET = ''
-
-# google.com
-GOOGLE_OAUTH2_CLIENT_ID = ''
-GOOGLE_OAUTH2_CLIENT_SECRET = ''
-GOOGLE_OAUTH2_USE_UNIQUE_USER_ID = True
-
-
-CACHES = {
-    "default": {
-        "BACKEND": "redis_cache.RedisCache",
-        "LOCATION": "127.0.0.1:6379",
-        "OPTIONS": {
-            'DB': 0,
-            "CLIENT_CLASS": "redis_cache.client.DefaultClient",
-        }
-    }
-}
-
-RQ_QUEUES = {
-    'default': {
-        'HOST': 'localhost',
-        'PORT': 6379,
-        'DB': 0,
-        'PASSWORD': '',
-    },
-    'low': {
-        'HOST': 'localhost',
-        'PORT': 6379,
-        'DB': 0,
-        'PASSWORD': '',
-    },
-    'high': {
-        'HOST': 'localhost',
-        'PORT': 6379,
-        'DB': 0,
-        'PASSWORD': '',
-    },
-}
+REDIS = {'host': 'localhost',
+         'port': 6379,
+         'db': 0,
+         }
 
 STREAM_SCALE = 1
+AIOREDIS_POOL_SIZE = 10

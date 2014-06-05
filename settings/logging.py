@@ -9,8 +9,8 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'standard': {
-            'format': "[%(levelname)s] [%(name)s:%(lineno)s] %(message)s",
-            'datefmt': "%d/%b/%Y %H:%M:%S"
+            'format': "[%(asctime)s.%(msecs)d] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt': "%H:%M:%S"
         },
     },
     'filters': {

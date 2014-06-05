@@ -13,6 +13,7 @@ THIRD_PARTY_APPS = (
     'south',
     'spurl',
     'django_extensions',
+    'bootstrapform',
 )
 
 PROJECT_APPS = (
