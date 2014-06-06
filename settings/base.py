@@ -14,10 +14,8 @@ DOMAIN = 'lol-voice-alpha.herokuapp.com'  # temporary
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django',
-        'USER': 'django',
-        'PASSWORD': 'gpyajbo5Le'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'none_db',
     }
 }
 
