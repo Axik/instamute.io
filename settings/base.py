@@ -126,6 +126,14 @@ LOGIN_REDIRECT_URL = '/profile/'
 
 LOG_FILE = rel('logs', 'app.log')
 
+REDIS = {'host': 'localhost',
+         'port': 6379,
+         'db': 0,
+         }
+
+STREAM_SCALE = 1
+AIOREDIS_POOL_SIZE = 10
+
 from .apps import *
 from .logging import *
 try:
