@@ -58,13 +58,3 @@ LOGGING = {
         },
     }
 }
-
-if LOG_FILE:
-    LOGGING['handlers']['logfile'] = {'level': 'DEBUG',
-                                      'filters': ['require_debug_false'],
-                                      'class': 'logging.handlers.RotatingFileHandler',
-                                      'filename': LOG_FILE,
-                                      'maxBytes': 50000,
-                                      'backupCount': 2,
-                                      'formatter': 'standard'}
-    LOGGING['loggers']['django.request']['handlers'].append('logfile')
