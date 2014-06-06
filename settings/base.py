@@ -15,14 +15,15 @@ DOMAIN = 'lol-voice-alpha.herokuapp.com'  # temporary
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'lol_voice',
-        'USER': 'postgresql',
+        'NAME': 'django',
+        'USER': 'django',
+        'PASSWORD': 'gpyajbo5Le'
     }
 }
 
 DATABASES['default']['CONN_MAX_AGE'] = None
 
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', False)
 TEMPLATE_DEBUG = DEBUG
 
 EMAIL_HOST = ''
