@@ -80,3 +80,7 @@ heroku_db:
 	heroku run "python manage.py syncdb --noinput" -a lol-voice-alpha
 	heroku run "python manage.py migrate" -a lol-voice-alpha
 	heroku run "python manage.py filldb" -a lol-voice-alpha
+
+digitalocean:
+	@python manage.py run_gunicorn --bind 0.0.0.0:80 -w 3 &
+	@make stream
