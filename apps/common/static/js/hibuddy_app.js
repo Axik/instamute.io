@@ -40,7 +40,7 @@ function parse_sheet(uri) {
 
 window.turnserversDotComAPI.iceServers(function(data) {
     compat = parse_sheet(data[1].url);
-    //    stun + turn over udp
+    console.log('hui');
     peer_config = {
         iceServers: [
             data[0], {
