@@ -5,21 +5,25 @@
     var voice_app = new VoiceApp(room);
 
     var localAudio = document.getElementById('local-audio');
-    var allowMedia = document.getElementById('allow-media');
-    var shareUrl = document.getElementById('share-url');
-    var error = document.getElementById('error');
     var parent_div = document.getElementById('videos');
     var stream_proto = document.getElementById('my_stream');
     var mute_me = document.getElementById('mute_me');
 
     voice_app.on("connected", function() {});
+
     voice_app.on("failure", function(failure) {
-        error.textContent = failure;
+        $("#modal-failure").modal();
+        setTimeout(function(){
+            $("#modal-failure").modal('hide');
+        }, 10000);
     });
 
     voice_app.on("dropped", function(from) {
         console.log('On drop' + from);
-        document.getElementById(from).remove();
+        var audio_div = document.getElementById(from);
+        if (audio_div){
+            audio_div.remove();
+        }
     });
 
     voice_app.on("rejected", function() {
@@ -30,7 +34,6 @@
         video: false,
         audio: true
     }, function(localStream) {
-        var el = document.querySelector("nav");
 
         localAudio.src = URL.createObjectURL(localStream);
         localAudio.play();
