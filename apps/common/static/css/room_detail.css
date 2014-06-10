@@ -38,3 +38,12 @@ input[type="range"] {
 #max_size_modal > div > div > div.modal-body > p > a{
     color: #428bca;
 }
+
+#modal-failure{
+    color: rgb(51, 51, 51);
+    text-shadow: none;
+    margin-top: 15%;
+}
+#modal-failure > div > div > div.modal-body > p > a{
+    color: #428bca;
+}
