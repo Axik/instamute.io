@@ -40,7 +40,6 @@ function parse_sheet(uri) {
 
 window.turnserversDotComAPI.iceServers(function(data) {
     compat = parse_sheet(data[1].url);
-    console.log('hui');
     peer_config = {
         iceServers: [
             data[0], {
@@ -251,7 +250,7 @@ VoiceApp.prototype = {
 
     _post: function(data) {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://' + window.location.hostname + '/rooms/' + this.room + '/signalling', true);
+        xhr.open('POST', 'http://' + window.location.host + '/rooms/' + this.room + '/signalling', true);
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         xhr.send(JSON.stringify(data));
     }
