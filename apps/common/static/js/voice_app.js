@@ -39,15 +39,14 @@ function parse_sheet(uri) {
 
 
 window.turnserversDotComAPI.iceServers(function(data) {
-    compat = parse_sheet(data[1].url);
+    // compat = parse_sheet(data[1].url);
     peer_config = {
-        iceServers: [
-            data[0], {
-                credential: data[1].credential,
-                url: compat.url,
-                username: compat.username
-            }
-        ]
+        iceServers: [{
+            // please contact me if you plan to use this server
+            url: 'turn:webrtc.monkeypatch.me:6424?transport=udp',
+            credential: 'hibuddy',
+            username: 'hibuddy'
+        }]
     };
 });
 
