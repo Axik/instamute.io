@@ -42,7 +42,7 @@
   </div>
 </div>
 <div class="row" style="margin-top:5%;">
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-md-5 col-md-offset-4">
       <button id="mute_me" class="btn btn-warning btn-lg"><span class="glyphicon glyphicon-eye-close"></span> Mute me</button>
     </div>
 </div>
@@ -56,20 +56,10 @@
               <i id="username">Me</i></button>
         </div>
           <audio id="local-audio" hidden></audio>
-        <div class="col-md-2 col-md-offset-1">
-          <button type="button" class="btn btn-default volume_c">
-            <span class="glyphicon glyphicon-volume-down"></span>
-          </button>
-        </div>
-        <div class="col-md-4">
+        <div class="col-md-9 col-md-offset-1">
           <input id="volume_range" type="range" step="0.01" min="0" max="1" value="1"/>
         </div>
-        <div class="col-md-2">
-          <button type="button" class="btn btn-default volume_c">
-            <span class="glyphicon glyphicon-volume-up"></span>
-          </button>
-        </div>
-        <div class="col-md-1 col-md-offset-1">
+        <div class="col-md-1">
           <button type="button" class="btn btn-danger btn-lg" onclick="togglePlayPause(this)">
             <span class="glyphicon glyphicon glyphicon-off"></span>
              Mute
@@ -77,6 +67,11 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+  {% include "rooms/text_chat.html" %}
   </div>
 </div>
 <!-- /.modal-start -->
@@ -118,8 +113,6 @@
     </div>
   </div>
 </div>
-
-{% include "rooms/text_chat.html" %}
 {% endblock content %}
 {% block js %}
 {{ block.super }}
