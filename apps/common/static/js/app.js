@@ -7,6 +7,7 @@
     var parent_div = document.getElementById('videos');
     var stream_proto = document.getElementById('my_stream');
     var mute_me = document.getElementById('mute_me');
+    var chat = new Chatter();
 
     voice_app.on("connected", function() {});
 
