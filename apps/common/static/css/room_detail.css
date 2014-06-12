@@ -10,7 +10,9 @@
 input[type="range"] {
     margin-top: 5%;
 }
-
+#my_stream > div > div > div.col-md-1.col-md-offset-1{
+    display: none;
+}
 .btn-lg {
     border-radius: 4px;
 }
