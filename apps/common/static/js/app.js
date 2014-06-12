@@ -1,5 +1,4 @@
 /* globals VoiceApp */
-
 (function() {
     var room = window.location.pathname.split('/')[2];
     var voice_app = new VoiceApp(room);
@@ -13,7 +12,7 @@
 
     voice_app.on("failure", function(failure) {
         $("#modal-failure").modal();
-        setTimeout(function(){
+        setTimeout(function() {
             $("#modal-failure").modal('hide');
         }, 10000);
     });
@@ -21,7 +20,7 @@
     voice_app.on("dropped", function(from) {
         console.log('On drop' + from);
         var audio_div = document.getElementById(from);
-        if (audio_div){
+        if (audio_div) {
             audio_div.remove();
         }
     });

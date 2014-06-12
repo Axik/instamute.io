@@ -19,7 +19,6 @@ function setVolume(volume_node, value) {
     audio.volume = value;
 }
 
-
 function bind_slider() {
 
     $("input[type=range]").each(function() {
@@ -30,7 +29,7 @@ function bind_slider() {
             min: 0,
             max: 1,
             step: 0.01,
-            value: 0.5,
+            value: 1,
             tooltip: "hide",
         });
         this.ranged = true;
@@ -50,5 +49,4 @@ $(document).ready(function() {
         },
         afterCopy: function() {},
     });
-
 })
