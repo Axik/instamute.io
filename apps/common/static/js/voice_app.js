@@ -57,7 +57,7 @@ VoiceApp.prototype = {
         this.stream = stream;
         this.onRemoteStream = callback;
         this.peers = {};
-        this.source = new EventSource("http://" + window.location.hostname + ":8888/rooms/" + this.room + "/signalling");
+        this.source = new EventSource("http://" + window.location.hostname + ":8080/stream/" + this.room);
         this.source.on = this.source.addEventListener.bind(this.source);
         this.source.on("uid", this._onUID.bind(this));
         this.source.on("newbuddy", this._onNewBuddy.bind(this));
@@ -251,7 +251,7 @@ VoiceApp.prototype = {
 
     _post: function(data) {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://' + window.location.host + '/rooms/' + this.room + '/signalling', true);
+        xhr.open('POST', 'http://' + window.location.hostname + ":8080/update/" + this.room, true);
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         xhr.send(JSON.stringify(data));
     }
