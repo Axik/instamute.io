@@ -34,7 +34,15 @@
         video: false,
         audio: true
     }, function(localStream) {
+        var speechEvents = hark(localStream, {});
 
+        speechEvents.on('speaking', function() {
+          console.log('speaking');
+        });
+
+        speechEvents.on('stopped_speaking', function() {
+          console.log('stopped_speaking');
+        });
         localAudio.src = URL.createObjectURL(localStream);
         localAudio.play();
         mutter = function() {
