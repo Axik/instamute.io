@@ -43,9 +43,9 @@ window.turnserversDotComAPI.iceServers(function(data) {
     peer_config = {
         iceServers: [{
             // please contact me if you plan to use this server
-            url: 'turn:webrtc.monkeypatch.me:6424?transport=udp',
-            credential: 'hibuddy',
-            username: 'hibuddy'
+            url: 'turn:192.158.29.39:3478?transport=udp',
+            credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+            username: '28224511:1379330808'
         }]
     };
 });
