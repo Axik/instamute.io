@@ -5,12 +5,14 @@
 #videos {
     margin-top: 10%;
 }
-
+#disqus_thread{
+    margin-top: 5%;
+}
 .slider,
 input[type="range"] {
     margin-top: 5%;
 }
-#my_stream > div > div > div.col-md-1.col-md-offset-1{
+#my_stream > div > div > div.col-md-1.col-md-offset-2{
     display: none;
 }
 .btn-lg {
@@ -23,11 +25,7 @@ input[type="range"] {
     background: #415C85;
     opacity: 1;
 }
-.volume_c {
-    display: none;
-    padding-right: 30%;
-    padding-left: 30%;
-}
+
 .stream {
     margin-top: 2%;
 }
