@@ -1,5 +1,4 @@
 /* globals VoiceApp */
-
 (function() {
     var room = window.location.pathname.split('/')[2];
     var voice_app = new VoiceApp(room);
@@ -8,12 +7,13 @@
     var parent_div = document.getElementById('videos');
     var stream_proto = document.getElementById('my_stream');
     var mute_me = document.getElementById('mute_me');
+    var chat = new Chatter();
 
     voice_app.on("connected", function() {});
 
     voice_app.on("failure", function(failure) {
         $("#modal-failure").modal();
-        setTimeout(function(){
+        setTimeout(function() {
             $("#modal-failure").modal('hide');
         }, 10000);
     });
@@ -21,7 +21,7 @@
     voice_app.on("dropped", function(from) {
         console.log('On drop' + from);
         var audio_div = document.getElementById(from);
-        if (audio_div){
+        if (audio_div) {
             audio_div.remove();
         }
     });
