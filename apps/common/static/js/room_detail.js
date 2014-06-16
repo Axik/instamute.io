@@ -30,7 +30,7 @@ function bind_slider() {
             min: 0,
             max: 1,
             step: 0.01,
-            value: 0.5,
+            value: 1,
             tooltip: "hide",
         });
         this.ranged = true;

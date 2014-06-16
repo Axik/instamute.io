@@ -23,7 +23,7 @@
   </div>
   <div class="col-md-3">
     <div class="row">
-      <div class="col-md-3 col-md-offset-6">
+      <div class="col-md-3 col-md-offset-4">
         <a href="#">
         <button type="button" class="btn btn-default btn-sm">
         <span class="glyphicon glyphicon-plus"></span>
@@ -55,21 +55,11 @@
           <button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-user"></span>
               <i id="username">Me</i></button>
         </div>
-          <audio id="local-audio" hidden muted></audio>
-        <div class="col-md-2 col-md-offset-1">
-          <button type="button" class="btn btn-default volume_c">
-            <span class="glyphicon glyphicon-volume-down"></span>
-          </button>
-        </div>
-        <div class="col-md-4">
+        <audio id="local-audio" hidden muted></audio>
+        <div class="col-md-4 col-md-offset-3">
           <input id="volume_range" type="range" step="0.01" min="0" max="1" value="1"/>
         </div>
-        <div class="col-md-2">
-          <button type="button" class="btn btn-default volume_c">
-            <span class="glyphicon glyphicon-volume-up"></span>
-          </button>
-        </div>
-        <div class="col-md-1 col-md-offset-1">
+        <div class="col-md-1 col-md-offset-2">
           <button type="button" class="btn btn-danger btn-lg" onclick="togglePlayPause(this)">
             <span class="glyphicon glyphicon glyphicon-off"></span>
              Mute
@@ -118,7 +108,9 @@
     </div>
   </div>
 </div>
-<div id="disqus_thread"></div>
+<div class="row">
+    <div id="disqus_thread"></div>
+</div>
     <script type="text/javascript">
         var disqus_shortname = 'instamute'; // required: replace example with your forum shortname
 

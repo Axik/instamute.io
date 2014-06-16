@@ -19,8 +19,8 @@
     <div class="site-wrapper">
       <div class="site-wrapper-inner">
         <div class="cover-container">
-          <div class="masthead clearfix">
-            <div class="inner">
+          <nav class="navbar navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
             {% if messages %}
             {% for message in messages %}
             <div class="alert alert-success alert-dismissable">
@@ -32,7 +32,7 @@
               <h3 class="masthead-brand">{% trans "None and Void" %}</h3>
               {% include "menu.html" %}
             </div>
-          </div>
+          </nav>
           {% block content %}
           <div class="inner cover">
             <h1 class="cover-heading">Cover your page.</h1>
