@@ -8,6 +8,18 @@
 #disqus_thread{
     margin-top: 5%;
 }
+
+.speaking {
+    border: solid;
+    border-radius: 1px;
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+}
+
+.row {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
 .slider,
 input[type="range"] {
     margin-top: 5%;
@@ -24,10 +36,6 @@ input[type="range"] {
 .slider-handle{
     background: #415C85;
     opacity: 1;
-}
-
-.stream {
-    margin-top: 2%;
 }
 
 #max_size_modal{

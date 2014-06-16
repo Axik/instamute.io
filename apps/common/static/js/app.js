@@ -13,7 +13,7 @@
 
     voice_app.on("failure", function(failure) {
         $("#modal-failure").modal();
-        setTimeout(function(){
+        setTimeout(function() {
             $("#modal-failure").modal('hide');
         }, 10000);
     });
@@ -21,7 +21,7 @@
     voice_app.on("dropped", function(from) {
         console.log('On drop' + from);
         var audio_div = document.getElementById(from);
-        if (audio_div){
+        if (audio_div) {
             audio_div.remove();
         }
     });
@@ -35,13 +35,14 @@
         audio: true
     }, function(localStream) {
         var speechEvents = hark(localStream, {});
+        var row_speaking = localAudio.parentNode;
 
         speechEvents.on('speaking', function() {
-          console.log('speaking');
+            row_speaking.className = 'row speaking';
         });
 
         speechEvents.on('stopped_speaking', function() {
-          console.log('stopped_speaking');
+            row_speaking.className = 'row';
         });
         localAudio.src = URL.createObjectURL(localStream);
         localAudio.play();
