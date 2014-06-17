@@ -26,11 +26,10 @@ var peer_config ={
       {url:'stun:stun.l.google.com:19302'},
       {url:'stun:stun1.l.google.com:19302'},
       iceServers: [{
-        // please contact me if you plan to use this server
-        url: 'turn:webrtc.monkeypatch.me:6424?transport=udp',
-        credential: 'hibuddy',
-        username: 'hibuddy'
-      }]
+         url: 'turn:192.158.29.39:3478?transport=tcp',
+         credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+         username: '28224511:1379330808'
+         }]
     };
 
 
