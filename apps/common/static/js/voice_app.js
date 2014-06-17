@@ -21,36 +21,43 @@ function VoiceApp(room) {
     this.me = undefined;
 }
 
-var peer_config = {};
+var peer_config ={
+      iceServers: [{
+        // please contact me if you plan to use this server
+        url: 'turn:webrtc.monkeypatch.me:6424?transport=udp',
+        credential: 'hibuddy',
+        username: 'hibuddy'
+      }]
+    };;
 
 
-function parse_sheet(uri) {
-    var parts = uri.split(':');
-    var turn = parts[0];
-    var ip_parts = parts[1].split('@');
-    var username = ip_parts[0];
-    var host = ip_parts[1];
-    var tail = parts[2];
-    return {
-        username: username,
-        url: turn + ':' + host + ':' + tail
-    };
-}
+// function parse_sheet(uri) {
+//     var parts = uri.split(':');
+//     var turn = parts[0];
+//     var ip_parts = parts[1].split('@');
+//     var username = ip_parts[0];
+//     var host = ip_parts[1];
+//     var tail = parts[2];
+//     return {
+//        username: username,
+//        url: turn + ':' + host + ':' + tail
+//     };
+// }
 
 
-window.turnserversDotComAPI.iceServers(function(data) {
-    compat = parse_sheet(data[1].url);
-    //    stun + turn over udp
-    peer_config = {
-        iceServers: [
-            data[0], {
-                credential: data[1].credential,
-                url: compat.url,
-                username: compat.username
-            }
-        ]
-    };
-});
+// window.turnserversDotComAPI.iceServers(function(data) {
+//     compat = parse_sheet(data[1].url);
+//     //    stun + turn over udp
+//     peer_config = {
+//        iceServers: [
+//             data[0], {
+//                 credential: data[1].credential,
+//                 url: compat.url,
+//                 username: compat.username
+//             }
+//        ]
+//     };
+// });
 
 VoiceApp.prototype = {
     start: function(stream, callback) {
