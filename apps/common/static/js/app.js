@@ -34,16 +34,6 @@
         video: false,
         audio: true
     }, function(localStream) {
-        var speechEvents = hark(localStream, {});
-        var row_speaking = localAudio.parentNode;
-
-        speechEvents.on('speaking', function() {
-            row_speaking.className = 'row speaking';
-        });
-
-        speechEvents.on('stopped_speaking', function() {
-            row_speaking.className = 'row';
-        });
         localAudio.src = URL.createObjectURL(localStream);
         localAudio.play();
         mutter = function() {
@@ -59,6 +49,19 @@
                 this.innerHTML = this.innerHTML.replace("Unmute", "Mute")
             }
         };
+
+        speech = function(stream, node){
+            var speechEvents = hark(stream, {});
+            var row_speaking = node.parentNode;
+            speechEvents.on('speaking', function() {
+                row_speaking.className = 'row speaking';
+            });
+
+            speechEvents.on('stopped_speaking', function() {
+                row_speaking.className = 'row';
+            });
+        };
+        speech(localStream, localAudio);
         mute_me.onclick = mutter;
         voice_app.start(localStream, function(remoteStream, from) {
 
@@ -66,6 +69,7 @@
             stream_clone.id = from;
             var audio_input = stream_clone.querySelector('#local-audio');
             audio_input.id = from;
+            speech(remoteStream, audio_input);
             parent_div.appendChild(stream_clone);
             audio_input.src = URL.createObjectURL(remoteStream);
             audio_input.removeAttribute("muted");
