@@ -28,7 +28,7 @@ var peer_config ={
         credential: 'hibuddy',
         username: 'hibuddy'
       }]
-    };;
+    };
 
 
 // function parse_sheet(uri) {
