@@ -82,5 +82,4 @@ heroku_db:
 	heroku run "python manage.py filldb" -a lol-voice-alpha
 
 digitalocean:
-	@python manage.py run_gunicorn --bind 0.0.0.0:80 -w 6 &
-	@make stream
+	newrelic-admin run-program gunicorn wsgi --bind 0.0.0.0:9000 -w 3
