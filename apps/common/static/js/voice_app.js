@@ -22,6 +22,9 @@ function VoiceApp(room) {
 }
 
 var peer_config ={
+      {url:'stun:stun.schlund.de'},
+      {url:'stun:stun.l.google.com:19302'},
+      {url:'stun:stun1.l.google.com:19302'},
       iceServers: [{
         // please contact me if you plan to use this server
         url: 'turn:webrtc.monkeypatch.me:6424?transport=udp',
