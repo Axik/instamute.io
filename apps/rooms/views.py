@@ -4,7 +4,7 @@ import redis
 from django.conf import settings
 from django.views.generic import CreateView, DetailView, View
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 from skd_tools.mixins import ActiveTabMixin
 import short_url
@@ -24,7 +24,10 @@ class RoomDetailView(DetailView):
     model = Room
 
     def get_object(self):
-        decoded_id = short_url.decode_url(self.kwargs.get('shorten_id'))
+        try:
+            decoded_id = short_url.decode_url(self.kwargs.get('shorten_id'))
+        except Exception:
+            raise Http404()
         return get_object_or_404(self.model, **{'id': decoded_id})
 
 
