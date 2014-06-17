@@ -13,7 +13,7 @@
 
     voice_app.on("failure", function(failure) {
         $("#modal-failure").modal();
-        setTimeout(function(){
+        setTimeout(function() {
             $("#modal-failure").modal('hide');
         }, 10000);
     });
@@ -21,7 +21,7 @@
     voice_app.on("dropped", function(from) {
         console.log('On drop' + from);
         var audio_div = document.getElementById(from);
-        if (audio_div){
+        if (audio_div) {
             audio_div.remove();
         }
     });
@@ -34,7 +34,6 @@
         video: false,
         audio: true
     }, function(localStream) {
-
         localAudio.src = URL.createObjectURL(localStream);
         localAudio.play();
         mutter = function() {
@@ -50,6 +49,19 @@
                 this.innerHTML = this.innerHTML.replace("Unmute", "Mute")
             }
         };
+
+        speech = function(stream, node){
+            var speechEvents = hark(stream, {});
+            var row_speaking = node.parentNode;
+            speechEvents.on('speaking', function() {
+                row_speaking.className = 'row speaking';
+            });
+
+            speechEvents.on('stopped_speaking', function() {
+                row_speaking.className = 'row';
+            });
+        };
+        speech(localStream, localAudio);
         mute_me.onclick = mutter;
         voice_app.start(localStream, function(remoteStream, from) {
 
@@ -57,6 +69,7 @@
             stream_clone.id = from;
             var audio_input = stream_clone.querySelector('#local-audio');
             audio_input.id = from;
+            speech(remoteStream, audio_input);
             parent_div.appendChild(stream_clone);
             audio_input.src = URL.createObjectURL(remoteStream);
             audio_input.removeAttribute("muted");
