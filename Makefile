@@ -3,7 +3,9 @@ DB_NAME = "lol_voice"
 
 APPS = "common" "profiles" "stream" "rooms"
 
-default: _requirements _settings db test end
+default: production
+
+unpack: _requirements _settings db test end
 
 _settings:
 	@echo "Emitting local development settings module"
@@ -61,13 +63,16 @@ shell:
 end:
 	@echo "You can now run development server using 'make run' command"
 
+end_production:
+	@echo "You can now run server"
+
 clean:
-	@echo "Cleaning *.pyc files"
+	@echo "Cleaning *.pyc files and __pycache__ folders"
 	@find . -name "*.pyc" -exec rm -f {} \;
-	@find . -name "__pycache__" -exec rm -rf {} \;
+	@find . -name "__pycache__" -exec rm -rf {} \; 2>&1 | >/dev/null
 
 collect_static:
-	python manage.py collectstatic -l --noinput
+	@python manage.py collectstatic -l --noinput
 
 compilemessages:
 	python manage.py compilemessages
@@ -80,3 +85,5 @@ heroku_db:
 	heroku run "python manage.py syncdb --noinput" -a lol-voice-alpha
 	heroku run "python manage.py migrate" -a lol-voice-alpha
 	heroku run "python manage.py filldb" -a lol-voice-alpha
+
+production: req clean db collect_static end_production
