@@ -11,7 +11,7 @@ def rel(*x):
 
 os.sys.path.insert(0, rel('apps'))
 
-DOMAIN = 'lol-voice-alpha.herokuapp.com'  # temporary
+DOMAIN = 'instamute.io'
 
 DATABASES = {'default': dj_database_url.config(default=os.environ.get('DATABASE_URL', {}))}
 DATABASES['default']['CONN_MAX_AGE'] = None
