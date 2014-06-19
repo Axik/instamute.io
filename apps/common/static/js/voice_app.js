@@ -22,52 +22,16 @@ function VoiceApp(room) {
 }
 
 var peer_config ={
-      url:'stun:stun1.l.google.com:19302',
-      iceServers: [{
-            url: 'turn:numb.viagenie.ca',
-            credential: 'muazkh',
-            username: 'webrtc@live.com'
-         },
-         {
-            url: 'turn:192.158.29.39:3478?transport=udp',
-            credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-            username: '28224511:1379330808'
-         },
-         {
-            url: 'turn:192.158.29.39:3478?transport=tcp',
-            credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-            username: '28224511:1379330808'
-         }]
-    };
+    "iceServers": [{
+               "url": "stun:stun.l.google.com:19302"
+            },
+            {
+               "url": "turn:noneandvoid.cloudapp.net:3478?transport=udp",
+               "username": "noneandvoid",
+               "credential": "noneandvoid"
+            }]
+   };
 
-
-// function parse_sheet(uri) {
-//     var parts = uri.split(':');
-//     var turn = parts[0];
-//     var ip_parts = parts[1].split('@');
-//     var username = ip_parts[0];
-//     var host = ip_parts[1];
-//     var tail = parts[2];
-//     return {
-//        username: username,
-//        url: turn + ':' + host + ':' + tail
-//     };
-// }
-
-
-// window.turnserversDotComAPI.iceServers(function(data) {
-//     compat = parse_sheet(data[1].url);
-//     //    stun + turn over udp
-//     peer_config = {
-//        iceServers: [
-//             data[0], {
-//                 credential: data[1].credential,
-//                 url: compat.url,
-//                 username: compat.username
-//             }
-//        ]
-//     };
-// });
 
 VoiceApp.prototype = {
     start: function(stream, callback) {
@@ -196,11 +160,7 @@ VoiceApp.prototype = {
 
         if (peerConnection.iceConnectionState === "connected") {
             this.trigger("connected");
-            this._post({
-                type: 'connected',
-                from: this.me,
-                answer: 'answer'
-            });
+            console.log('RTP connection made.')
         }
     },
 
