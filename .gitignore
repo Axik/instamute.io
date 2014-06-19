@@ -28,12 +28,9 @@ env/
 .env
 
 # Project
-/public/
+public/
 
 # Settings
-settings_local.py
-local_settings.py
-local.py
 
 # SQLite
 *.sqlite*

@@ -1,0 +1,53 @@
+import sys
+
+from .base import *
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+TESTING = sys.argv[1:2] == ['test']
+
+DOMAIN = 'localhost:8000'
+
+if TESTING:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:'
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'lol_voice',
+            'USER': '',
+        }
+    }
+
+
+if not TESTING:
+    # debug toolbar settings
+    INTERNAL_IPS = ('127.0.0.1',)
+
+    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+
+    INSTALLED_APPS += ('debug_toolbar', 'django_coverage')
+
+    DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False,
+                            'SHOW_TEMPLATE_CONTEXT': True}
+
+TEST_RUNNER = 'django_coverage.coverage_runner.CoverageRunner'
+COVERAGE_MODULE_EXCLUDES = ['tests$', 'settings$', 'urls$', 'locale$', 'filldb',
+                            '__init__', 'django', 'migrations']
+
+
+REDIS = {'host': 'localhost',
+         'port': 6379,
+         'db': 0,
+         }
+
+STREAM_SCALE = 1
+AIOREDIS_POOL_SIZE = 10
