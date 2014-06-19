@@ -68,8 +68,8 @@ end_production:
 
 clean:
 	@echo "Cleaning *.pyc files and __pycache__ folders"
-	@find . -name "*.pyc" -exec rm -f {} \;
-	@find . -name "__pycache__" -exec rm -rf {} \; 2>&1 | >/dev/null
+	@$(find . -name "*.pyc" -exec rm -f {} \; &>/dev/null)
+	@$(find . -type d -name "__pycache__" -exec rm -rf {} \; &>/dev/null) 
 
 collect_static:
 	@python manage.py collectstatic -l --noinput
