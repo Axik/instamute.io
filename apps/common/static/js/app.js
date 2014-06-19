@@ -81,6 +81,7 @@
 
     }, function(err) {
         console.error("getUserMedia Failed: " + err);
+        $("#failed_media_modal").modal();
     });
 
 }());
