@@ -11,7 +11,7 @@ def rel(*x):
 
 os.sys.path.insert(0, rel('apps'))
 
-DOMAIN = 'lol-voice-alpha.herokuapp.com'  # temporary
+DOMAIN = 'instamute.io'
 
 DATABASES = {'default': dj_database_url.config(default=os.environ.get('DATABASE_URL', {}))}
 DATABASES['default']['CONN_MAX_AGE'] = None
@@ -28,6 +28,7 @@ EMAIL_USE_TLS = True
 ADMINS = (
     ('Sanyer Myasoedov', 'msoedov@gmail.com'),
     ('Kyrylo Perevozchykov', 'paravozchikov@gmail.com'),
+    ('Val Sichkovskiy', 'v.sichkovskiy@gmail.com'),
 )
 
 EMAIL_HOST = 'smtp.gmail.com'
