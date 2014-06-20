@@ -18,6 +18,8 @@
   <body>
     <div class="site-wrapper">
       <div class="site-wrapper-inner">
+      {% block carousel %}
+      {% endblock carousel %}
         <div class="cover-container">
           <nav class="navbar navbar-fixed-top" role="navigation">
             <div class="container">
@@ -29,17 +31,11 @@
             </div>
             {% endfor %}
             {% endif %}
-              <h3 class="masthead-brand">{% trans "Instamute.io" %}</h3>
               {% include "menu.html" %}
             </div>
           </nav>
           {% block content %}
           {% endblock content %}
-          <footer class="mastfoot">
-            <div class="inner">
-              <p>LoL Voice Chat <a href="{% url 'rooms:create' %}">Instamute.io</a>, by <a href="https://twitter.com/instamute">@instamute</a>.</p>
-            </div>
-          </footer>
         </div>
       </div>
     </div>

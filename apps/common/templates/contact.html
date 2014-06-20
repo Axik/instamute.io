@@ -4,21 +4,24 @@
 {% block extra_head %}
     <style type="text/css">
         textarea { resize: none; }
+        }
     </style>
 {% endblock extra_head %}
 {% block title %}
     {% trans "Instamute.io: Contact" %}
 {% endblock title %}
+{% block carousel %}
+{% endblock carousel %}
 {% block content %}
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-    <form method="POST" action="{% url 'contact' %}">
-    {% csrf_token %}
-    {{ form|bootstrap }}
-    <button type="submit" name="submit" value="" class="btn btn-success btn-lg">
-    {% trans "Send it!" %}
-    </button>
-    </form>
+        <form method="POST" action="{% url 'contact' %}">
+        {% csrf_token %}
+        {{ form|bootstrap }}
+            <button type="submit" name="submit" value="" class="btn btn-success btn-lg">
+            {% trans "Send it!" %}
+            </button>
+        </form>
     </div>
 </div>
 {% endblock content %}
