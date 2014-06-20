@@ -7,8 +7,7 @@
 {% block extra_head %}
     <style type="text/css">
     .carousel{
-        background-image: url({% static "img/teambuilder-wallpaper.png" %});
-        background-repeat: space;
+        background-repeat: no-repeat;
         min-height: 585px;
         box-shadow: 0 0 20px rgba(0,0,0,0.5);
         text-shadow: 1px 1px 5px black, 0 0 2em #26292e;
@@ -50,21 +49,60 @@
 {% endblock extra_head %}
 {% block carousel %}
     <div class="carousel">
-        <div class="cover">
-            <h1><strong> {% trans "Nothing, except the voice chat." %}</strong>
-            </h1>
-            <form action="{% url 'rooms:create' %}" method="post">{% csrf_token %}
-                <p class="lead">
-                <button class="btn btn-lg btn-success" name="submit" type="submit">{% trans "Create Room" %}</button>
-                </p>
-            </form>
+        <div class="item active">
+        <img src="{% static "img/teambuilder-wallpaper.png" %}" width='100%'>
+
+          <div class="container">
+            <div class="carousel-caption">
+                <div class="cover">
+                    <h1><strong> {% trans "Nothing, except the voice chat." %}</strong>
+                    </h1>
+                    <form action="{% url 'rooms:create' %}" method="post">{% csrf_token %}
+                        <p class="lead">
+                        <button class="btn btn-lg btn-success" name="submit" type="submit">{% trans "Create Room" %}</button>
+                        </p>
+                    </form>
+                </div>
+            </div>
+          </div>
         </div>
     </div>
-    <div class="row main">
-        <a href="http://github.com/Axik"><div class="col-md-4 github"></div></a>
-        <a href="http://twitter.com/instamute"><div class="col-md-4 twitter"></div></a>
-        <a href="http://lolking.com"><div class="col-md-4 lolking"></div></a>
+
+
+    <div class="col-sm-4 services-box-1">
+    	<div class="services-box-1-icon">
+    		<i class="fa fa-laptop"></i>
+    	</div>
+        <h3>No Payment</h3>
+        <p>
+
+        </p>
+        <div class="services-box-1-button">
+        </div>
     </div>
+    <div class="col-sm-4 services-box-1">
+    	<div class="services-box-1-icon">
+    		<i class="fa fa-desktop"></i>
+    	</div>
+        <h3>Easy to use</h3>
+        <p>
+
+        </p>
+        <div class="services-box-1-button">
+        </div>
+    </div>
+    <div class="col-sm-4 services-box-1">
+    	<div class="services-box-1-icon">
+    		<i class="fa fa-tablet"></i>
+    	</div>
+        <h3>No retards</h3>
+        <p>
+
+        </p>
+        <div class="services-box-1-button">
+        </div>
+    </div>
+
 {% endblock carousel %}
 {% block content %}
 <div class="container-main">
