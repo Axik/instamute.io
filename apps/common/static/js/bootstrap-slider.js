@@ -453,6 +453,17 @@
                 .data('value', this.value)
                 .prop('value', this.value);
         },
+
+        clicked: function(val) {
+            var slideEventValue = this.range ? this.value : this.value[0];
+            this.element
+                .trigger({
+                    'type': 'clicked',
+                    'value': slideEventValue
+                })
+                .data('value', this.value)
+                .prop('value', this.value);
+        },
         adjustPercentageForRangeSliders: function(percentage) {
             if (this.range) {
                 if (this.dragged === 0 && this.percentage[1] < percentage) {
@@ -595,6 +606,7 @@
             }
 
             this.layout();
+            this.clicked(val);
         },
 
         validateInputValue: function(val) {
