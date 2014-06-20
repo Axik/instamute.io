@@ -1,29 +1,73 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static %}
 {% block title %}
 {% trans "Room create" %}
 {% endblock title %}
 {% block extra_head %}
     <style type="text/css">
-    .about{
-        margin-bottom: 20%;
+    .carousel{
+        background-image: url({% static "img/teambuilder-wallpaper.png" %});
+        background-repeat: space;
+        min-height: 585px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        text-shadow: 1px 1px 5px black, 0 0 2em #26292e;
+    }
+    .cover{
+        padding-top: 10%;
+    }
+    .site-wrapper{
+        display: block;
+    }
+    .site-wrapper-inner{
+        display: block;
+    }
+    .row.main{
+        margin-top: 6%;
+    }
+    .twitter{
+        background-image: url({% static "img/TR_Icon.png" %});
+        background-repeat: no-repeat;
+        background-size: 30%;
+        min-height: 100px;
+        background-position: center;
+    }
+    .lolking{
+        background-image: url({% static "img/lolking.png" %});
+        background-repeat: no-repeat;
+        background-size: 30%;
+        min-height: 100px;
+        background-position: center;
+    }
+    .github{
+    background-image: url({% static "img/Github.png" %});
+    background-repeat: no-repeat;
+    background-size: 15%;
+    min-height: 100px;
+    background-position: center;
     }
     </style>
 {% endblock extra_head %}
-{% block content %}
-<div class="inner cover">
-    <div class="about">
-        <h3 class="cover-heading">{% trans "Just voice web chat" %} </h3>
-        <h3 class="cover-heading">{% trans "Anonymous. No payments. No plugins. No software. "%} </h3>
-        <h1 class="cover-heading"><strong> {% trans "Nothing, except the voice chat." %}</strong></h1>
+{% block carousel %}
+    <div class="carousel">
+        <div class="cover">
+            <h1><strong> {% trans "Nothing, except the voice chat." %}</strong>
+            </h1>
+            <form action="{% url 'rooms:create' %}" method="post">{% csrf_token %}
+                <p class="lead">
+                <button class="btn btn-lg btn-success" name="submit" type="submit">{% trans "Create Room" %}</button>
+                </p>
+            </form>
+        </div>
     </div>
-    <p class="lead">{% trans "Just go, and " %}</p>
-
-    <h1 class="cover-heading"></h1>
-    <form action="{% url 'rooms:create' %}" method="post">{% csrf_token %}
-        <p class="lead">
-        <button class="btn btn-lg btn-default" name="submit" type="submit">{% trans "Create Room" %}</button>
-        </p>
-    </form>
+    <div class="row main">
+        <a href="http://github.com/Axik"><div class="col-md-4 github"></div></a>
+        <a href="http://twitter.com/instamute"><div class="col-md-4 twitter"></div></a>
+        <a href="http://lolking.com"><div class="col-md-4 lolking"></div></a>
+    </div>
+{% endblock carousel %}
+{% block content %}
+<div class="container-main">
+    
 </div>
 {% endblock content %}

@@ -13,7 +13,7 @@ a:hover {
 .btn-default,
 .btn-default:hover,
 .btn-default:focus {
-  color: #333;
+  color: #26292e;
   text-shadow: none; /* Prevent inheritence from `body` */
   background-color: #fff;
   border: 1px solid #fff;
@@ -27,7 +27,7 @@ a:hover {
 html,
 body {
   height: 100%;
-  background-color: #333;
+  background-color: #26292e;
   background-repeat: no-repeat;
 }
 body {
@@ -109,11 +109,13 @@ body {
  */
 
 .cover {
-  padding: 0 20px;
+  /*padding: 0 20px;*/
 }
 .cover .btn-lg {
-  padding: 10px 20px;
+  padding: 25px 40px;
   font-weight: bold;
+  margin-top: 20px;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
 }
 
 
@@ -140,6 +142,7 @@ body {
   .mastfoot {
     position: relative;
     bottom: 0;
+    float: bottom;
   }
   /* Start the vertical centering */
   .site-wrapper-inner {
