@@ -79,6 +79,14 @@
             bind_slider();
         });
 
+//Disqus
+        var disqus_shortname = 'instamute'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
     }, function(err) {
         console.error("getUserMedia Failed: " + err);
         $("#failed_media_modal").modal();
