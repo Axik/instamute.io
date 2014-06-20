@@ -9,8 +9,10 @@
     .carousel{
         background-repeat: no-repeat;
         min-height: 585px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.5);
         text-shadow: 1px 1px 5px black, 0 0 2em #26292e;
+    }
+    .main_image{
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
     .carousel-caption{
         bottom: 200px !important; 
@@ -56,7 +58,7 @@
 {% block carousel %}
     <div class="carousel">
         <div class="item active">
-        <img src="{% static "img/teambuilder-wallpaper.png" %}" width='100%'>
+        <img class="main_image" src="{% static "img/teambuilder-wallpaper.png" %}" width='100%'>
           <div class="container">
             <div class="carousel-caption">
                 <div class="cover">
