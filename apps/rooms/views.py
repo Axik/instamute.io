@@ -1,6 +1,7 @@
 
 from django.views.generic import CreateView, DetailView
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 from django.http import Http404
 
 from skd_tools.mixins import ActiveTabMixin
@@ -23,6 +24,12 @@ class RoomDetailView(DetailView):
         except Exception:
             raise Http404()
         return get_object_or_404(self.model, **{'id': decoded_id})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        js_conf = {'addr': settings.SIGNALING_HOST}
+        context['js_conf'] = js_conf
+        return context
 
 
 room_create = RoomCreateView.as_view()

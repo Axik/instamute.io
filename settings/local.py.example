@@ -51,3 +51,5 @@ REDIS = {'host': 'localhost',
 
 STREAM_SCALE = 1
 AIOREDIS_POOL_SIZE = 10
+
+SIGNALING_HOST = 'http://0.0.0.0:8080'

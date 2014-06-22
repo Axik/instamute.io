@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static %}
 {% block title %}
     {% trans "Instamute.io: About" %}
 {% endblock title %}
@@ -12,9 +13,11 @@
 {% endblock extra_head %}
 {% block content %}
 <div class="inner cover">
-    <h1 class="cover-heading">{% trans "Instamute.io" %}</h1>
-    <h2 class="cover-heading">{% trans "Just voice web chat" %} </h2>
-    <h2 class="cover-heading">{% trans "Anonymous. No payments. No plugins. No software. "%} </h2>
-    <h2 class="cover-heading"><strong> {% trans "Nothing, except voice chat" %}</strong></h2>
+    <h2 class="cover-heading">{% trans "Share your microphone" %}</h1>
+        <img class="main_image" src="{% static "img/Firefox.png" %}" width='100%'>
+        <img class="main_image" src="{% static "img/Chrome.png" %}" width='100%'>
+
+    <h2 class="cover-heading">{% trans "That it!" %}</h1>
+        <img class="main_image" src="{% static "img/Done.png" %}" width='100%'>
 </div>
 {% endblock content %}

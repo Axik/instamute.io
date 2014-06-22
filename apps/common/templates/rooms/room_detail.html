@@ -78,6 +78,9 @@
 {% endblock content %}
 {% block js %}
 {{ block.super }}
+<script>
+    var SiganlingAddr = "{{js_conf.addr}}";
+</script>
 <script type="text/javascript" src="{% static "js/microevent.js" %}" ></script>
 <script type="text/javascript" src="{% static "js/hark.js" %}" ></script>
 <script type="text/javascript" src="{% static "js/voice_app.js" %}" ></script>
