@@ -134,3 +134,6 @@ except ImportError:
 
 STREAM_SCALE = 1
 MAX_MEMBERS = 5
+
+# Should be without trailing / in the end!
+SIGNALING_HOST = 'http://instamute.io:8080'
