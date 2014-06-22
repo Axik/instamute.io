@@ -87,6 +87,9 @@
             dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
         })();
+        window.onbeforeunload = function(){
+          return 'Are you sure?';
+        };
     }, function(err) {
         console.error("getUserMedia Failed: " + err);
         $("#failed_media_modal").modal();
