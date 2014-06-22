@@ -1,7 +1,7 @@
 /* globals VoiceApp */
 
 (function() {
-    var room = window.location.pathname.split('/')[2];
+    var room = window.location.pathname.split('/')[1];
     var voice_app = new VoiceApp(room);
 
     var localAudio = document.getElementById('local-audio');
