@@ -25,11 +25,12 @@ var peer_config ={
     "iceServers": [{
                "url": "stun:stun.l.google.com:19302"
             },
-            {
-               "url": "turn:noneandvoid.cloudapp.net:3478?transport=udp",
-               "username": "noneandvoid",
-               "credential": "noneandvoid"
-            }]
+        {
+            // please contact me if you plan to use this server
+            url: 'turn:webrtc.monkeypatch.me:6424?transport=udp',
+            credential: 'hibuddy',
+            username: 'hibuddy'
+        }]
    };
 
 
