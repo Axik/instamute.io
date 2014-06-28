@@ -15,7 +15,8 @@
     <div class="input-group">
       <input name="copy_link" id="copy_link" type="text" disabled value="{{ request.build_absolute_uri }}" class="form-control" >
       <span class="input-group-btn">
-        <button type="button" class="btn btn-default btn-lg" type="button" id="copy_link_button" data_link="{% static "js/ZeroClipboard.swf" %}">
+        <button type="button" class="btn btn-default btn-lg popover-dismiss"
+                type="button" id="copy_link_button" data_link="{% static "js/ZeroClipboard.swf" %}">
           <span class="glyphicon glyphicon-link"></span>
         </button>
       </span>
@@ -24,26 +25,30 @@
   <div class="col-md-3">
     <div class="row">
       <div class="col-md-3 col-md-offset-4">
-        <a href="#">
-        <button type="button" class="btn btn-default btn-sm">
-        <span class="glyphicon glyphicon-plus"></span>
-        </button>
-        </a>
+{#        <a href="#">#}
+{#        <button type="button" class="btn btn-default btn-sm">#}
+{#        <span class="glyphicon glyphicon-plus"></span>#}
+{#        </button>#}
+{#        </a>#}
       </div>
       <div class="col-md-2 col-md-offset-1">
-        <a href="">
-        <button type="button" class="btn btn-default btn-sm">
-        <span class="glyphicon glyphicon-trash">
-        </span>
-        </button>
-        </a>
+{#        <a href="">#}
+{#        <button type="button" class="btn btn-default btn-sm">#}
+{#        <span class="glyphicon glyphicon-trash">#}
+{#        </span>#}
+{#        </button>#}
+{#        </a>#}
       </div>
     </div>
   </div>
 </div>
 <div class="row" style="margin-top:5%;">
-  <div class="col-md-6 col-md-offset-3">
-      <button id="mute_me" class="btn btn-warning btn-lg"><span class="glyphicon-microphone"></span>      Mute me</button>
+  <div class="col-md-6">
+      <button id="mute_me" class="btn btn-lg"><span class="glyphicon-microphone"></span>      Mute me</button>
+    </div>
+
+    <div class="col-md-6">
+      <button id="mute_all" class="btn btn-lg" onclick="mute_controller(this);"><span class="glyphicon-microphone"></span>      Mute all</button>
     </div>
 </div>
 
@@ -52,7 +57,7 @@
     <div class="col-md-12">
       <div class="row">
         <div class="col-md-1">
-          <button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-user"></span>
+          <button type="button" class="btn btn btn-lg"><span class="glyphicon glyphicon-user"></span>
               <i id="username">Me</i></button>
         </div>
         <audio id="local-audio" hidden muted></audio>
@@ -60,8 +65,8 @@
           <input id="volume_range" type="range" step="0.01" min="0" max="1" value="1"/>
         </div>
         <div class="col-md-1 col-md-offset-2">
-          <button type="button" class="btn btn-danger btn-lg" onclick="togglePlayPause(this)">
-            <span class="glyphicon glyphicon glyphicon-off"></span>
+          <button type="button" class="btn btn btn-lg" id='gaymute' onclick="togglePlayPause(this)">
+            <span class="glyphicon glyphicon-headphones"></span>
              Mute
           </button>
         </div>
@@ -74,7 +79,6 @@
     <div id="disqus_thread"></div>
 </div>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-{#<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>#}
 {% endblock content %}
 {% block js %}
 {{ block.super }}
