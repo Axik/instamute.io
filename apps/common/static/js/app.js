@@ -41,11 +41,11 @@
             for (var i = 0, l = audioTracks.length; i < l; i++) {
                 audioTracks[i].enabled = !audioTracks[i].enabled;
             }
-            if (this.className === "btn btn-warning btn-lg") {
+            if (this.className === "btn btn-lg") {
                 this.className = "btn btn-danger btn-lg";
                 this.innerHTML = this.innerHTML.replace("Mute", "Unmute")
             } else {
-                this.className = "btn btn-warning btn-lg";
+                this.className = "btn btn-lg";
                 this.innerHTML = this.innerHTML.replace("Unmute", "Mute")
             }
         };
