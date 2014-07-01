@@ -48,6 +48,7 @@ VoiceApp.prototype = {
         this.source.on("invite", this._onInvite.bind(this));
         this.source.on("dropped", this._onDropped.bind(this));
         this.source.on("rejected", this._onRejected.bind(this));
+        this.source.on("keepalive", this._onKeepalive.bind(this));
     },
 
     _onUID: function(event) {
@@ -61,6 +62,10 @@ VoiceApp.prototype = {
         console.log('Rejected: ' + message.message);
         this.source.close();
         this.trigger("rejected", message.message)
+    },
+
+    _onKeepalive: function(event) {
+       console.log("keepalive" + event.data);
     },
 
     _onInvite: function(event) {
