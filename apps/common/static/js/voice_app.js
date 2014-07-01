@@ -155,7 +155,6 @@ VoiceApp.prototype = {
     _onIceStateChange: function(peerConnection) {
         // XXX: display an error if the ice connection failed
         console.log("ice: " + peerConnection.iceConnectionState);
-        console.warn(peerConnection.remoteDescription.sdp);
         if (peerConnection.iceConnectionState === "failed") {
             console.error("Something went wrong: the connection failed");
             this.trigger("failure");

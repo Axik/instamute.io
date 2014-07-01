@@ -74,17 +74,18 @@ $(document).ready(function() {
     $('#copy_link_button').zclip({
         path: this.data_link,
         copy: function() {
-            return $("#copy_link").val()
+            return "Open " + $("#copy_link").val() +
+                 "in your browser to join my voice chat room and " +
+                "win some more ELO! No signup and completely anonymous!"
         },
-        afterCopy: function() {}
-    });
+        afterCopy: function() {
+            $("#jsallert").css({'display': ''});
+            $("#jsallert").html('Ready to paste!');
+            setTimeout(function(){$("#jsallert").hide()}, 1500);
 
-// bug
-//    $('#copy_link_button').popover({
-//      trigger: 'focus',
-//      placement: 'right',
-//      content: 'Ready to paste'
-//    });
+
+        }
+    });
 
     $('#mute_all').popover({
       trigger: 'hover',
