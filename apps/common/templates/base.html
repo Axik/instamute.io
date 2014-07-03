@@ -23,6 +23,9 @@
         <div class="cover-container">
           <nav class="navbar navbar-fixed-top" role="navigation">
             <div class="container">
+                <div class="alert alert-success alert-dismissable" id="jsallert" style="display: none">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                </div>
             {% if messages %}
             {% for message in messages %}
             <div class="alert alert-success alert-dismissable">
