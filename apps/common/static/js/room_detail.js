@@ -75,7 +75,7 @@ $(document).ready(function() {
         path: this.data_link,
         copy: function() {
             return "Open " + $("#copy_link").val() +
-                 "in your browser to join my voice chat room and " +
+                 "  in your browser to join my voice chat room and " +
                 "win some more ELO! No signup and completely anonymous!"
         },
         afterCopy: function() {
