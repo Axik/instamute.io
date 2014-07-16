@@ -49,7 +49,7 @@ VoiceApp.prototype = {
         this.source.on("invite", this._onInvite.bind(this));
         this.source.on("dropped", this._onDropped.bind(this));
         this.source.on("rejected", this._onRejected.bind(this));
-        this.source.on("keepalive", this._onKeepalive.bind(this));
+        this.source.on("heartbeat", this._onKeepalive.bind(this));
     },
 
     _onUID: function(event) {
@@ -62,7 +62,7 @@ VoiceApp.prototype = {
         var message = JSON.parse(event.data);
         console.log('Rejected: ' + message.message);
         this.source.close();
-        this.trigger("rejected", message.message)
+        this.trigger("heartbeat", message.message)
     },
 
     _onKeepalive: function(event) {
@@ -158,10 +158,12 @@ VoiceApp.prototype = {
         if (peerConnection.iceConnectionState === "failed") {
             console.error("Something went wrong: the connection failed");
             this.trigger("failure");
+            this.failure(['can`t connect']);
         }
 
         if (peerConnection.iceConnectionState === "disconnected") {
             this.trigger("disconnected");
+            this.failure(['disconnected']);
         }
 
         if (peerConnection.iceConnectionState === "connected") {
@@ -235,6 +237,13 @@ VoiceApp.prototype = {
     _post: function(data) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', SiganlingAddr + "/update/" + this.room, true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.send(JSON.stringify(data));
+    },
+
+    failure: function(data) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', SiganlingAddr + "/failure", true);
         xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         xhr.send(JSON.stringify(data));
     }
