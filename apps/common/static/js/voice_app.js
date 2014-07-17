@@ -62,11 +62,11 @@ VoiceApp.prototype = {
         var message = JSON.parse(event.data);
         console.log('Rejected: ' + message.message);
         this.source.close();
-        this.trigger("heartbeat", message.message)
+        this.trigger("rejected", message.message)
     },
 
     _onKeepalive: function(event) {
-       console.log("keepalive" + event.data);
+       console.log("heartbeat" + event.data);
     },
 
     _onInvite: function(event) {
