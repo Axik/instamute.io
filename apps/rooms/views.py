@@ -13,6 +13,7 @@ from .models import Room
 class RoomCreateView(ActiveTabMixin, CreateView):
     model = Room
     active_tab = 'home'
+    template_name = 'landing.html'
 
 
 class RoomDetailView(DetailView):
