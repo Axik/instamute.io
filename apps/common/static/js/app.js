@@ -11,6 +11,11 @@
 
     voice_app.on("connected", function() {});
 
+    voice_app.on("uid", function(name) {
+        var username = stream_proto.querySelector('#username');
+        username.innerHTML = name + " (me)";
+    });
+
     voice_app.on("failure", function(failure) {
         $("#modal-failure").modal();
         setTimeout(function() {
@@ -49,6 +54,7 @@
                 this.innerHTML = this.innerHTML.replace("Unmute", "Mute")
             }
         };
+        $(".alert").hide();
 
         speech = function(stream, node){
             var speechEvents = hark(stream, {});

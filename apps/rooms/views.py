@@ -3,6 +3,7 @@ from django.views.generic import CreateView, DetailView
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.http import Http404
+from django.contrib import messages
 
 from skd_tools.mixins import ActiveTabMixin
 import short_url
@@ -24,6 +25,7 @@ class RoomDetailView(DetailView):
             decoded_id = short_url.decode_url(self.kwargs.get('shorten_id'))
         except Exception:
             raise Http404()
+        messages.success(self.request, 'Please share you microphone')
         return get_object_or_404(self.model, **{'id': decoded_id})
 
     def get_context_data(self, **kwargs):

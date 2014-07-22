@@ -56,6 +56,7 @@ VoiceApp.prototype = {
         var message = JSON.parse(event.data);
         this.me = message.uid;
         console.log('UID: ' + this.me);
+        this.trigger("uid", this.me)
     },
 
     _onRejected: function(event) {
